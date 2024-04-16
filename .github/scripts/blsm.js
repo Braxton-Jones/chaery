@@ -64,11 +64,7 @@ async function sendToBackend(data) {
     .post('https://blossom-ai-rose.vercel.app/api/blsm', JSONdata)
     .then((response) => {
       console.log('Getting response from microservice...')
-      console.log(
-        'Response from microservice:',
-        response.status,
-        response.statusText,
-      )
+      console.log('Response from microservice:', response.status, response.statusText)
     })
     .catch((error) => {
       console.error('Error sending data:', error)

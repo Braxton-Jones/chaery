@@ -11,8 +11,7 @@ const nunito_sans = Nunito_Sans({
 
 export const metadata: Metadata = {
   title: 'Chaery',
-  description:
-    'Chaery is a modern way for couples to be on the same page and plan their future together.',
+  description: 'Chaery is a modern way for couples to be on the same page and plan their future together.',
 }
 
 export default function RootLayout({
