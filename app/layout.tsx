@@ -20,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`${nunito_sans.variable} bg-black-300 text-white h-full`}>
+    <html lang="en" className="h-full">
+      <body className={`${nunito_sans.variable} bg-black-300 text-white min-h-full flex items-center justify-center`}>
         <WidthProvider>{children}</WidthProvider>
       </body>
     </html>

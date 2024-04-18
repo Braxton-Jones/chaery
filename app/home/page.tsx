@@ -1,5 +1,6 @@
 import BudgetWidget from '@/components/budget-widget'
 import CalendarWidget from '@/components/calender-widget'
+import FoodWidget from '@/components/food-widget'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
@@ -19,14 +20,15 @@ export default async function Homepage() {
     },
   )
 
-  // const { data, error } = await supabase.auth.getUser()
-  // if (error || !data?.user) {
-  //   redirect('/login')
-  // }
+  const { data, error } = await supabase.auth.getUser()
+  if (error || !data?.user) {
+    redirect('/login')
+  }
 
   return (
     <div className="flex flex-col gap-4">
       <CalendarWidget />
+      <FoodWidget />
       <BudgetWidget />
     </div>
   )

@@ -4,15 +4,15 @@ import Link from 'next/link'
 
 export default function Home() {
   return (
-    <section className="flex flex-col gap-10">
+    <section className="flex flex-col gap-10 max-w-4xl bg-black-400 p-5 rounded-md border-cherry_light-800 border-2">
       <div className="flex flex-col gap-2">
         <p className="text-xl font-bold text-center italic ">
-          Live as <span className="text-mauve">one</span>. Plan as <span className="text-mauve">one</span>. Be as{' '}
-          <span className="text-mauve">one</span>.
+          Live as <span className="text-cherry_light-800">one</span>. Plan as{' '}
+          <span className="text-cherry_light-800">one</span>. Be as <span className="text-cherry_light-800">one</span>.
         </p>
         <h1 className="text-3xl font-bold text-center">
-          Introducing <span className="text-mauve font-black underline">Chaery</span>, a modern way for couples to be on
-          the same page and plan their future together.
+          Introducing <span className="text-cherry_light-800 font-black underline">Chaery</span>, a modern way for
+          couples to be on the same page and plan their future together.
         </h1>
       </div>
 
@@ -38,7 +38,7 @@ export default function Home() {
       {/* Login */}
       <Button
         asChild
-        className="w-1/2 mx-auto font-nunito_sans text-lg bg-mauve text-white hover:bg-mauve_dark hover:text-white"
+        className="w-1/2 mx-auto font-nunito_sans text-lg bg-cherry_medium-800 text-white hover:bg-mauve_dark hover:text-white"
       >
         <Link href="/login">Login</Link>
       </Button>
