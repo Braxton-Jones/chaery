@@ -6,14 +6,12 @@ export default function OnboardingSucess() {
     <section>
       <Card>
         <CardHeader>
-        <CardTitle>Looks like you&apos;re first here...</CardTitle>
+          <CardTitle>Looks like you&apos;re first here...</CardTitle>
           <CardDescription>We&apos;re waiting for `partner` to connect with you.</CardDescription>
         </CardHeader>
         <CardContent>
           <div>
-            <p>
-                Tell `partner` to sign up for Chaery and connect with you.
-            </p>
+            <p>Tell `partner` to sign up for Chaery and connect with you.</p>
           </div>
         </CardContent>
         <CardFooter>

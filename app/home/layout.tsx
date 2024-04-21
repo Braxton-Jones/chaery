@@ -65,7 +65,7 @@ export default async function RootLayout({
       if (onboardingData) {
         console.log(onboardingData, 'User has not been onboarded')
         console.log('Redirecting to onboarding page')
-        redirect(`/onboarding?firstName=${firstName}&lastName=${lastName}&email=${email}&avatar=${userAvatar}`)
+        // redirect(`/onboarding?firstName=${firstName}&lastName=${lastName}&email=${email}&avatar=${userAvatar}`)
       }
       //  Checking to see if user exists in the database, if not, create a new user
       const { data: userData, error: userError } = await supabase.from('Users').select('*').eq('email', email)
@@ -98,7 +98,7 @@ export default async function RootLayout({
   return (
     <section className="w-full flex flex-col gap-6">
       {/* Header */}
-      <section className="w-full flex flex-col gap-4 bg-black-500 h-fit p-4 rounded-lg">
+      <header className="w-full flex flex-col gap-4 bg-black-500 h-fit p-4 rounded-lg">
         {/* Settings & Notification */}
         <section className="flex justify-between">
           <div>
@@ -171,7 +171,7 @@ export default async function RootLayout({
             </CollapsibleContent>
           </Collapsible>
         </section>
-      </section>
+      </header>
       {/* Main Content */}
       <section className="bg-black-500 h-fit p-4 rounded-lg">{children}</section>
     </section>
