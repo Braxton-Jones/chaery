@@ -38,46 +38,58 @@ export default async function RootLayout({
 
   const handleAuthCheck = async () => {
     try {
+      // Step 1: Fetch user data from Supabase authentication
       const { data, error } = await supabase.auth.getUser()
+  
+      // Check for errors or if user data doesn't exist, redirect to login
       if (error || !data?.user) {
         console.log('Redirecting to login from /home/layout.tsx')
         redirect('/login')
       }
-
-      // Getting data from google auth
-
+  
+      // Step 2: Extract user metadata
       const userMetadata = data.user.user_metadata
       const userAvatar = userMetadata?.avatar_url
       const fullName = userMetadata?.full_name
       const [firstName, lastName] = fullName?.split(' ') || []
-      const email: string = userMetadata?.email
+      const email = userMetadata?.email
 
-      // Check if user has been onboarded. If not, redirect to onboarding page
+      const { data: userData, error: userError } = await supabase
+        .from('Users')
+        .select('*')
+        .eq('email', email)
+  
+      // Log error if there's an issue fetching user data
+      if (userError) {
+        console.log('Error fetching user data from database')
+      }
+  
+      // If user data exists, log success message
+      if (userData) {
+        console.log(userData, 'User data fetched successfully')
+      }
+  
+      // Step 3: Check if user has completed onboarding
       const { data: onboardingData, error: onboardingError } = await supabase
         .from('Users')
         .select('*')
         .eq('email', email)
         .eq('bonded', false)
-
+  
+      // Log error if there's an issue fetching onboarding data
       if (onboardingError) {
         console.log('Error fetching onboarding data from database')
       }
+  
+      // If onboarding is required, log and redirect to onboarding page
       if (onboardingData) {
         console.log(onboardingData, 'User has not been onboarded')
         console.log('Redirecting to onboarding page')
         // redirect(`/onboarding?firstName=${firstName}&lastName=${lastName}&email=${email}&avatar=${userAvatar}`)
       }
-      //  Checking to see if user exists in the database, if not, create a new user
-      const { data: userData, error: userError } = await supabase.from('Users').select('*').eq('email', email)
 
-      if (userError) {
-        console.log('Error fetching user data from database')
-      }
-
-      if (userData?.length ?? 0 > 0) {
-        console.log(userData, 'User data fetched successfully')
-      }
-
+  
+      // Step 5: Return user-related data and a placeholder for partner data
       return {
         user: {
           avatar: userAvatar,
@@ -87,11 +99,12 @@ export default async function RootLayout({
         partner: {}, // Placeholder for partner data
       }
     } catch (err) {
-      console.error('Error in handleAuthCheck:', err)
       // Handle errors appropriately
+      console.error('Error in handleAuthCheck:', err)
       throw err
     }
   }
+  
 
   const { user, partner } = await handleAuthCheck()
 
