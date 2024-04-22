@@ -1,13 +1,33 @@
+'use client'
+
+import { createBrowserClient } from '@supabase/ssr'
 import React from 'react'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import { useRouter } from 'next/navigation'
 
 export default function UserSettings() {
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  )
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut()
+    if (error) {
+      console.error('Error logging out:', error.message)
+    }
+    if (!error) {
+      console.log('Redirecting to login from /components/user-settings.tsx')
+      router.push('/')
+    }
+  }
   return (
-    <section className="mt-2">
+    <>
       <Card className="bg-white-500 border-none text-black">
         <CardHeader className="text-left w-fit">
           <CardTitle className="font-semibold">Profile</CardTitle>
@@ -51,12 +71,13 @@ export default function UserSettings() {
           </Button>
           <Button
             variant="outline"
-            className="border-cherry_medium-700 hover:bg-cherry_medium-700 border-2 bg-black-400 text-whi font-nunito_sans"
+            className=" hover:bg-cherry_medium-700 border-2 bg-black-900  font-nunito_sans"
+            onClick={handleLogout}
           >
             Logout
           </Button>
         </CardFooter>
       </Card>
-    </section>
+    </>
   )
 }

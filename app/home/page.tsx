@@ -20,10 +20,10 @@ export default async function Homepage() {
     },
   )
 
-  // const { data, error } = await supabase.auth.getUser()
-  // if (error || !data?.user) {
-  //   redirect('/login')
-  // }
+  const { data, error } = await supabase.auth.getUser()
+  if (error || !data?.user) {
+    redirect('/login')
+  }
 
   return (
     <div className="flex flex-col gap-4">
