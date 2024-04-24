@@ -4,6 +4,10 @@ import { createBrowserClient } from '@supabase/ssr'
 import React from 'react'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { useSearchParams } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 export default function OnboardingSuccess() {
   const supabase = createBrowserClient(
@@ -15,18 +19,19 @@ export default function OnboardingSuccess() {
   return (
     <section>
       <Card>
-        <CardHeader>
-          <CardTitle>Looks like you&apos;re first here...</CardTitle>
-          <CardDescription>We&apos;re waiting for `partner` to connect with you.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div>
-            <p>Tell `partner` to sign up for Chaery and connect with you.</p>
-          </div>
+        <CardContent className='p-6'>
+        <div className="flex flex-col items-center justify-center">
+      <div className="space-y-4 text-center">
+        <h1 className="text-3xl font-bold tracking-tighter text-gray-900 dark:text-gray-50">
+          Waiting for Account Linking
+        </h1>
+        <p className="max-w-md text-gray-500 dark:text-gray-400">
+          Please wait while the other user completes their account registration. This page will automatically update once the other user has completed their registration.
+        </p>
+        <div className="flex items-center justify-center" />
+      </div>
+    </div>
         </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
       </Card>
     </section>
   )

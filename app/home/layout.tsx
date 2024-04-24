@@ -71,7 +71,6 @@ export default async function RootLayout({
         .from('Users')
         .select('*')
         .eq('email', email)
-        .eq('isOnboarded', false)
 
       // Log error if there's an issue fetching onboarding data
       if (onboardingError) {
