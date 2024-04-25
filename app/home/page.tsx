@@ -77,6 +77,8 @@ if (error || !data?.user) {
       redirect(`onboarding?firstName=${firstName}&lastName=${lastName}&email=${email}&avatar=${userAvatar}`);
     } else {
       console.log("User has completed the onboarding process and is in the database");
+      console.log("Redirecting to the relationship page if they have a BondID")
+      redirect(`/home/dashboard/${userData[0].bondID}`);
     }
   }
 }
