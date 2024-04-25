@@ -36,10 +36,6 @@ export default async function DashboardLayout({
     },
   )
 
-  // Get the params and the user
-
-  
-
   return (
     <section className="w-full flex flex-col gap-6">
       {/* Header */}
