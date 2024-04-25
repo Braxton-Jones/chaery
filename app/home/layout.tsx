@@ -56,7 +56,10 @@ export default async function RootLayout({
     ])
     if (newUserError) {
       console.error('Error adding new user:', newUserError)
+    }else{
+      redirect(`onboarding?firstName=${firstName}&lastName=${lastName}&email=${email}&avatar=${userAvatar}`)
     }
+
   } else {
     // Handle if user is in database after login.
 
@@ -85,7 +88,7 @@ export default async function RootLayout({
       } else if (pendingData && pendingData[0]?.request !== null) {
         console.log('User is not onboarded and has a pending request')
         const request = JSON.parse(pendingData[0].request)
-        redirect(`onboarding/confirmRelationship?sender=${request.sender}&chaerybond=${request.chaery_bond_id}&user=${}`)
+        redirect(`onboarding/confirmRelationship?sender=${request.sender}&chaerybond=${request.chaery_bond_id}`)
       }
     }
 
