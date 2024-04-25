@@ -47,6 +47,11 @@ const getUser = async () => {
      return null
    }
 }
+getUser().then((data)=>{
+    if(data){
+        console.log(data)
+    }
+})
 })
 
 
