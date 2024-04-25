@@ -36,6 +36,10 @@ export default async function DashboardLayout({
     },
   )
 
+  // Get the params and the user
+
+  
+
   return (
     <section className="w-full flex flex-col gap-6">
       {/* Header */}
@@ -47,7 +51,7 @@ export default async function DashboardLayout({
             <Dialog>
               <DialogTrigger className="hover:brightness-90 flex items-center gap-2 bg-white-200 p-2 rounded-xl">
                 <Avatar className="w-8 h-8">
-                  <AvatarImage src={user.avatar} />
+                  {/* <AvatarImage src={user.avatar} /> */}
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <p></p>

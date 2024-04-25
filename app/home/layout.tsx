@@ -107,7 +107,12 @@ export default async function RootLayout({
       if (pendingData && pendingData[0].request !== null) {
         console.log('User is onboarded and has a pending request')
       } else {
-        console.log('User is onboarded and has no pending request')
+        // console.log('User is onboarded and has no pending request')
+      }
+
+      if(pendingData && pendingData[0].bondID !== null){
+        console.log('User is onboarded and has a bondID')
+        redirect(`/home/dashboard?chaerybond=${pendingData[0].bondID}`)
       }
     }
   }

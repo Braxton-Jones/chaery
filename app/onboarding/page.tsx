@@ -158,7 +158,8 @@ export default function Onboarding() {
     if (userError) {
       console.log('Error fetching user during Relationship Init:', userError)
     }
-    if (userData && userData[0]?.partner_id === null) {
+    console.log('User data:', userData)
+    if (userData && userData[0]?.partner_id === null && userData[0]?.request === null) {
       console.log('User has no partner')
       const { data: userUpdateData, error: userUpdateError } = await supabase
         .from('Users')
@@ -219,9 +220,45 @@ export default function Onboarding() {
           }
         }
       }
-    } else {
-      // Show modal for user with a partner
-      console.log('User has a partner:', userData)
+    }
+    if (userData && userData[0]?.request !== null) {
+      console.log('User has a request from this partner')
+      const request = JSON.parse(userData[0].request)
+      // get the relationship id from the request
+        const { data: relationshipData, error: relationshipError } = await supabase
+            .from('Relationships')
+            .select('*')
+            .eq('chaery_link_id', request.chaery_bond_id)
+        if (relationshipError) {
+            console.log('Error fetching relationship:', relationshipError)
+        }else{
+            const {data: updateUserData, error: updateError} = await supabase
+                .from('Users')
+                .update({
+                    partner_id: partner.chaery_id,
+                    request: null,
+                    isOnboarded: true
+                })
+                .eq('chaery_id', userChaeryID)
+            if (updateError) {
+                console.log('Error updating user during Relationship Init:', updateError)
+            }else{
+                setUpdates(`Connected with ${partner.firstName} ${partner.lastName}!`)
+                const {data: relationshipUpdateData, error: relationshipUpdateError} = await supabase
+                    .from('Relationships')
+                    .update({
+                        partner_ids: [userChaeryID, partner.chaery_id]
+                    })
+                    .eq('chaery_link_id', request.chaery_bond_id)
+                if (relationshipUpdateError) {
+                    console.log('Error updating relationship:', relationshipUpdateError)
+                }else{
+                setUpdates(`Redirecting to relationship page...`)
+                router.push('/onboarding/relationship?ChaeryBondID=' + request.chaery_bond_id)
+                }
+            }
+        }
+     
     }
   }
 
@@ -232,9 +269,6 @@ export default function Onboarding() {
         <CardDescription className="text-center">Select an option below to get started!</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <PopupModal isOpen={isModalOpen} onClose={closeModal}>
-          <div>hwww</div>
-        </PopupModal>
         <div>
           {partner.firstName && (
             <div className="space-y-2 bg-cherry_light-900 p-2.5 rounded-xl">
