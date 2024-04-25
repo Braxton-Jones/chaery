@@ -1,6 +1,18 @@
 'use client'
+import React from 'react'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/components/ui/input-otp'
 import { createBrowserClient } from '@supabase/ssr'
-import React, { use } from 'react'
 import { redirect, useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
@@ -15,11 +27,10 @@ type ParamTypes = {
   email: string
   avatar: string
 }
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import PopupModal from '@/components/generic-modal'
+import { set } from 'date-fns'
 
 type PartnerType = {
   firstName: string
@@ -54,10 +65,14 @@ export default function Onboarding() {
   const [error, setError] = useState('')
   const [userChaeryID, setUserChaeryID] = useState('')
   const [inputValue, setInputValue] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const openModal = () => setIsModalOpen(true)
+  const closeModal = () => setIsModalOpen(false)
   const [partner, setPartner] = useState<PartnerType>({
     firstName: '',
     lastName: '',
     avatar: '',
+    chaery_id: '',
   })
 
   useEffect(() => {
@@ -100,233 +115,265 @@ export default function Onboarding() {
     checkUser() // Call the initial check when the component mounts
   }, [email, firstName, lastName, avatar, supabase])
 
-  const handlePartnerSearch = async (partnerID: string) => {
-    if (inputValue.length < 8) {
+  const handlePartnerSearch = async () => {
+    setUpdates('Searching for partner...')
+    // Searches for the partner in the Users table
+    console.log('Searching for partner:', inputValue)
+    const { data: partnerData, error: partnerError } = await supabase
+      .from('Users')
+      .select('*')
+      .eq('chaery_id', inputValue)
+    if (partnerError) {
+      console.log('Error fetching partner:', partnerError)
       setIsError(true)
-      setError('Please enter a valid partner ID')
-      return
+      setError('Error fetching partner data. Please try again.')
     }
-
-    if (inputValue === userChaeryID.replace('chaery-', '')) {
-      setIsError(true)
-      setError('You cannot connect with yourself !')
-      return
-    }
-    if (inputValue === '' || inputValue === null) {
-      setIsError(true)
-      setError('Please enter a valid partner ID')
-      return
-    }
-    const formattedPartnerID = 'chaery-' + partnerID
-    console.log('partner ID:', formattedPartnerID)
-    const { data, error } = await supabase.from('Users').select('*').eq('chaery_id', formattedPartnerID).single()
-    if (error) {
-      console.log('Error fetching partner:', error.message)
-      setIsError(true)
-      setError(`Could not find partner with ID: ${formattedPartnerID}`)
-    }
-    if (data) {
-      console.log('Partner fetched successfully:', data)
-      setIsError(false)
-      setError('')
+    if (partnerData && partnerData.length > 0) {
+      console.log('Partner fetched successfully:', partnerData)
       setPartner({
-        firstName: data.first_name,
-        lastName: data.last_name,
-        avatar: data.avatar_url,
-        chaery_id: data.chaery_id,
+        firstName: partnerData[0].first_name,
+        lastName: partnerData[0].last_name,
+        avatar: partnerData[0].avatar_url,
+        chaery_id: partnerData[0].chaery_id,
       })
+      await setUpdates('')
+    } else {
+      setIsError(true)
+      setError('Partner not found.')
+      setUpdates('Please check the Chaery ID and try again.')
+      setPartner({
+        firstName: '',
+        lastName: '',
+        avatar: '',
+      })
+      console.log('Partner not found:', partnerData)
     }
   }
 
-  const updateUserPartnerID = async (partnerID: string | undefined) => {
-    console.log('Updating user with partner ID:', partnerID);
-    console.log('Current user ID:', userChaeryID);
-  
-    try {
-      const { data, error } = await supabase
-        .from("Users")
-        .update({ partner_id: partnerID })
-        .eq('chaery_id', userChaeryID);
-  
-      if (error) {
-        console.log('Error updating user:', error.message);
-      }
-      
-      if (data) {
-        console.log('User updated successfully:', data);
-      }
-    } catch (err) {
-      console.log('Error updating user:', err.message);
+  const handleRelationshipInit = async () => {
+    setUpdates('Checking Chaery database...')
+    const newChaeryBondID = `chaerybond-${nanoid(12)}`
+    // Check if the user has a partner
+    const { data: userData, error: userError } = await supabase.from('Users').select('*').eq('chaery_id', userChaeryID)
+    if (userError) {
+      console.log('Error fetching user during Relationship Init:', userError)
     }
-  }
-
-  const updateOnboardingStatus = async (userChaeryID: string) => {
-     try{
-      const { data, error } = await supabase.from('Users').update({ isOnboarded: true }).eq('chaery_id', userChaeryID)
-      if (error) {
-        console.log('Error updating user:', error.message)
-      }
-      if (data) {
-        console.log('User updated successfully:', data)
-      }
-     }
-     catch (err) {
-       console.log('Error updating user:', err.message)
-     }
-
-  }
-
-  const initRelationshipConnection = async (userChaeryID: string) => {
-    // check if a relationship already exists containing the user's chaery_id
-    const {data: relationshipData, error: relationshipError} = await supabase.from('Relationships').select().eq('partner_ids', [userChaeryID]).single()
-    if (relationshipError) {
-      console.log('Error fetching relationship:', relationshipError.message)
-    }
-    if (relationshipData) {
-      return { chaery_link_id: relationshipData.chaery_link_id};
-    }
-    // Create a new relationship between the two users
-    const {data, error} = await supabase.from('Relationships').insert([
-      {
-        chaery_link_id: `bond-${nanoid(15)}`,
-        partner_ids: [userChaeryID],
-      }
-    ]).select()
-    if (error) {
-      console.log('Error creating relationship:', error.message)
-    }
-    if (data) {
-      return { chaery_link_id: data[0].chaery_link_id};
-    }
-
-  }
-  
-
-  const handleFinishOnboarding = async () => {
-    let isRelationshipInit = false;
-
-  
-    try {
-      await updateUserPartnerID(partner.chaery_id)
-      const { data: connectionData, error: connectionError } = await supabase
+    if (userData && userData[0]?.partner_id === null) {
+      console.log('User has no partner')
+      const { data: userUpdateData, error: userUpdateError } = await supabase
         .from('Users')
-        .select('partner_id')
+        .update({ partner_id: partner.chaery_id })
         .eq('chaery_id', userChaeryID)
-        .single();
-  
-      if (connectionError) {
-        throw new Error(`Error fetching partner data: ${connectionError.message}`);
-      }
-  
-      if (connectionData) {
-        // Check if partner_id is the same as user's chaery_id
-        if (connectionData.partner_id === partner.chaery_id) {
-          console.log('User connected with partner successfully!');
-          setUpdates(`Connected with ${partner.firstName}!`);
-          updateOnboardingStatus(userChaeryID);
+      if (userUpdateError) {
+        console.log('Error updating user during Relationship Init:', userUpdateError)
+      } else {
+        // user is now connected with partner, we can start the relationship
+        setUpdates(`Connected with ${partner.firstName} ${partner.lastName}!`)
+        const { data: partnerUpdateData, error } = await supabase.from('Relationships').insert([
+          {
+            partner_ids: [userChaeryID],
+            chaery_link_id: newChaeryBondID,
+          },
+        ])
+        if (error) {
+          console.log('Error creating relationship:', error)
         } else {
-          setUpdates(`Waiting for ${partner.firstName} to connect with you... the id you are connected with is ${connectionData.partner_id}`);
+          setUpdates(`Connecting ${partner.firstName} ${partner.lastName} to the relationship...`)
+          const { data: userRequestData, error: userRequestError } = await supabase
+            .from('Users')
+            .update({
+              request: JSON.stringify({
+                sent: partner.chaery_id,
+                chaery_bond_id: newChaeryBondID,
+              }),
+              isOnboarded: true,
+            })
+            .eq('chaery_id', userChaeryID)
+          if (userRequestError) {
+            console.log('Error sending request to partner:', userRequestError)
+          } else {
+            setUpdates(`Done!`)
+          }
+          // add a request to the partner to accept the relationship
+          setUpdates(`Requesting ${partner.firstName} ${partner.lastName} to accept the relationship...`)
+          const { data: partnerRequestData, error: partnerRequestError } = await supabase
+            .from('Users')
+            .update({
+              request: JSON.stringify({
+                sender: userChaeryID,
+                chaery_bond_id: newChaeryBondID,
+              }),
+            })
+            .eq('chaery_id', partner.chaery_id)
+          if (partnerRequestError) {
+            console.log('Error sending request to partner:', partnerRequestError)
+          } else {
+            setTimeout(() => {
+              setUpdates(`Request sent to ${partner.firstName} ${partner.lastName}!`)
+            }, 1000)
+            setTimeout(() => {
+              setUpdates(`Redirecting to relationship page...`)
+            }, 2000)
+
+            router.push('/onboarding/relationship?ChaeryBondID=' + newChaeryBondID)
+          }
         }
       }
-  
-      await updateOnboardingStatus(userChaeryID); 
-      const relationshipData = await initRelationshipConnection(userChaeryID);
-      if (relationshipData) {
-        const { chaery_link_id } = relationshipData;
-        router.push(`/onboarding/bonded?bond_id=${chaery_link_id}`);
-      }
-    } catch (error) {
-      console.error('Error handling onboarding:', error);
+    } else {
+      // Show modal for user with a partner
+      console.log('User has a partner:', userData)
     }
-  };
-  
+  }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          <div className="flex flex-row-reverse items-center gap-4">
-            <h1>
-              Welcome In, {firstName} {lastName}!
-            </h1>
-            <Avatar className="w-12 h-12">
-              <AvatarImage src={avatar} />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-          </div>
-        </CardTitle>
-        <CardDescription>Let&apos;s get you connected with your special someone.</CardDescription>
+        <CardTitle className="text-center font-bold">Welcome to Chaery!</CardTitle>
+        <CardDescription className="text-center">Select an option below to get started!</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-3">
-        {updates && (
-          <div className="flex items-center gap-2">
-            <p className="text-cherry_light-700 text-sm font-nunito_sans italic">{updates}</p>{' '}
-            <div role="status">
-              <svg
-                aria-hidden="true"
-                className="w-3 h-3 text-black-700 animate-spin dark:black-700 fill-cherry_light-700"
-                viewBox="0 0 100 101"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                  fill="currentFill"
-                />
-              </svg>
-              <span className="sr-only">Loading...</span>
-            </div>
-          </div>
-        )}
-
-        <div className="flex items-center gap-4">
-          <h3>Your Chaery ID</h3>
-          <Button
-            className="w-fit bg-cherry_light-700  h-fit py-0.5"
-            onClick={() => navigator.clipboard.writeText(userChaeryID.replace('chaery-', ''))}
-          >
-            {userChaeryID ? userChaeryID : 'Loading...'}
-          </Button>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="username">Enter your 8-digit partner&apos;s ID here. YSOGuG2d</Label>
-          <Input
-            id="username"
-            placeholder="example : chaery-(xxxxxxx)"
-            className="w-full ring-offset-cherry_light-900"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-          {isError && <p className="text-red-500 space-y-2 text-sm text-wrap">{error}</p>}
-          <Button className="w-full bg-cherry_light-700" onClick={() => handlePartnerSearch(inputValue)}>
-            Connect
-          </Button>
-        </div>
-        {partner.firstName && (
-          <div className="space-y-2 bg-cherry_light-900 p-2.5 rounded-xl">
-            <div className="flex items-center flex-col space-y-4">
-              <div className="flex flex-col gap-2 ">
-                <h3 className="text-xl font-semibold">User Found!</h3>
-                <p className="text-sm">
-                  {partner.firstName} {partner.lastName}
-                </p>
+      <CardContent className="space-y-4">
+        <PopupModal isOpen={isModalOpen} onClose={closeModal}>
+          <div>hwww</div>
+        </PopupModal>
+        <div>
+          {partner.firstName && (
+            <div className="space-y-2 bg-cherry_light-900 p-2.5 rounded-xl">
+              <div className="flex items-center flex-col space-y-4">
+                <div className="flex flex-col gap-2 ">
+                  <h3 className="text-xl font-semibold">User Found!</h3>
+                  <p className="text-sm">
+                    {partner.firstName} {partner.lastName}
+                  </p>
+                </div>
+                <Avatar className="w-24 h-24">
+                  <AvatarImage src="/public/test.jpg" />
+                  <AvatarFallback>Partner</AvatarFallback>
+                </Avatar>
+                <p className="text-sm">Chaery ID: {partner.chaery_id}</p>
               </div>
-              <Avatar className="w-24 h-24">
-                <AvatarImage src="/public/test.jpg" />
-                <AvatarFallback>Partner</AvatarFallback>
-              </Avatar>
-              <p className="text-sm">Chaery ID: {partner.chaery_id}</p>
+              <Button className="w-full bg-cherry_light-700" onClick={handleRelationshipInit}>
+                Connect with {partner.firstName}?
+              </Button>
             </div>
-            <Button className="w-full bg-cherry_light-700" onClick={handleFinishOnboarding}>
-              Connect with {partner.firstName}?
-            </Button>
-          </div>
-        )}
+          )}
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <div className="flex flex-row-reverse items-center text-md w-full justify-end gap-4">
+                <h1>
+                  Hello, {firstName} {lastName}!
+                </h1>
+                <Avatar className="w-12 h-12">
+                  <AvatarImage src={avatar} />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </div>
+            </CardTitle>
+            <CardDescription>Let&apos;s get you connected with your special someone.</CardDescription>
+            {updates && (
+              <div className="flex items-center gap-2">
+                <p className="text-cherry_light-700 text-sm font-nunito_sans italic">{updates}</p>{' '}
+                <div role="status">
+                  <svg
+                    aria-hidden="true"
+                    className="w-3 h-3 text-black-700 animate-spin dark:black-700 fill-cherry_light-700"
+                    viewBox="0 0 100 101"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                      fill="currentColor"
+                    />
+                    <path
+                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                      fill="currentFill"
+                    />
+                  </svg>
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            )}
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex items-center gap-4">
+              <h3>Your Chaery ID</h3>
+              <Button
+                className="w-fit bg-cherry_light-700  h-fit py-0.5"
+                // dont forget to change this to the actual chaery id
+                onClick={() => navigator.clipboard.writeText('chaery-YSOGuG2d')}
+              >
+                {userChaeryID ? userChaeryID : 'Loading...'}
+              </Button>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="username">Enter your 8-digit partner&apos;s ID here.</Label>
+              <Input
+                id="username"
+                placeholder="example : chaery-(xxxxxxx)"
+                className="w-full ring-offset-cherry_light-900"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+              />
+              {isError && <p className="text-red-500 space-y-2 text-sm text-wrap">{error}</p>}
+              <Button className="w-full bg-cherry_light-700" onClick={handlePartnerSearch}>
+                Connect
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </CardContent>
     </Card>
   )
 }
+
+// Users will only see this page once, after they sign up and their account is made in the Users table.
+// This page will ask them some questions to get to know them better.
+
+// export default function OnboardingPage() {
+//   const searchParams = useSearchParams()
+//   const firstName = searchParams.get('firstName')
+//   const lastName = searchParams.get('lastName')
+//   const email = searchParams.get('email')
+//   const avatarUrl = searchParams.get('avatar')
+//   return (
+//     <Card>
+//       <CardHeader>
+//         <CardTitle className="text-center font-bold">Welcome to Chaery!</CardTitle>
+//         <CardDescription className="text-center">Select an option below to get started!</CardDescription>
+//       </CardHeader>
+//       <CardContent className="space-y-4">
+//         {/* <div className="space-y-2">
+//           <Label>Select if you are starting a new Chaery account</Label>
+//           <Dialog >
+//             <DialogTrigger className="w-full py-4 rounded-md bg-cherry_light-700 hover:bg-cherry_light-400" >Connect using a ChearyID</DialogTrigger>
+//             <DialogContent className='rounded-md bg-cherry_light-800'>
+//               <DialogHeader>
+//                 <DialogTitle>Connect using a ChaeryID</DialogTitle>
+//                 <DialogDescription>
+//                   Enter your
+//                 </DialogDescription>
+//               </DialogHeader>
+//             </DialogContent>
+//           </Dialog>
+//         </div>
+//         <div className="space-y-2">
+//           <Label>Select if your partner has already setup a Chaery account</Label>
+//           <Dialog>
+//             <DialogTrigger className="w-full py-4 rounded-md bg-cherry_light-700 hover:bg-cherry_light-400">Connect using a ChearyBondID</DialogTrigger>
+//             <DialogContent>
+//               <DialogHeader>
+//                 <DialogTitle>Are you absolutely sure?</DialogTitle>
+//                 <DialogDescription>
+//                   This action cannot be undone. This will permanently delete your account and remove your data from our
+//                   servers.
+//                 </DialogDescription>
+//               </DialogHeader>
+//             </DialogContent>
+//           </Dialog>
+//         </div> */}
+//       </CardContent>
+//     </Card>
+//   )
+// }

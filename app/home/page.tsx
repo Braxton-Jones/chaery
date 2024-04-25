@@ -1,9 +1,10 @@
-import BudgetWidget from '@/components/budget-widget'
-import CalendarWidget from '@/components/calender-widget'
-import FoodWidget from '@/components/food-widget'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 
 export default async function Homepage() {
   const cookieStore = cookies()
@@ -20,16 +21,18 @@ export default async function Homepage() {
     },
   )
 
-  const { data, error } = await supabase.auth.getUser()
-  if (error || !data?.user) {
-    redirect('/login')
-  }
-
   return (
-    <div className="flex flex-col gap-4">
-      <CalendarWidget />
-      <FoodWidget />
-      <BudgetWidget />
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Card Title</CardTitle>
+        <CardDescription>Card Description</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p>Card Content</p>
+      </CardContent>
+      <CardFooter>
+        <p>Card Footer</p>
+      </CardFooter>
+    </Card>
   )
 }
