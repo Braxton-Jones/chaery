@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${nunito_sans.variable} bg-black-300 text-white min-h-full flex items-center justify-center`}>
+      <body className={`${nunito_sans.variable} bg-black-300 text-white min-h-full flex justify-center`}>
         <WidthProvider>{children}</WidthProvider>
       </body>
     </html>

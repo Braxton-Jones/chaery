@@ -5,5 +5,5 @@ export default function WidthProvider({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return <div className="w-full h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center my-4">{children}</div>
+  return <div className="w-full min-h-full max-w-7xl mx-auto flex justify-center">{children}</div>
 }

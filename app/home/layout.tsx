@@ -9,6 +9,5 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-
-  return <section>{children}</section>
+  return <section className="w-full h-full flex justify-center">{children}</section>
 }

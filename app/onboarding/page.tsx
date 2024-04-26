@@ -181,7 +181,7 @@ export default function Onboarding() {
   const updateUsersBondID = async (chaeryID: string, bondID: string) => {
     const { data: bondData, error: bondError } = await supabase
       .from('Users')
-      .update({ bondID: bondID})
+      .update({ bondID: bondID })
       .eq('chaery_id', chaeryID)
     if (bondError) {
       console.log('Error updating bondID:', bondError)
@@ -193,25 +193,21 @@ export default function Onboarding() {
     const chaerybond = `chaerybond-${nanoid(12)}`
     const { data: relationshipData, error: relationshipError } = await supabase.from('Relationships').insert([
       {
-         chaery_link_id: chaerybond,
+        chaery_link_id: chaerybond,
       },
     ])
     if (relationshipError) {
       console.log('Error creating relationship:', relationshipError)
-    }else{
+    } else {
       console.log('Relationship created:', relationshipData)
       setUpdates('Creating ChaeryBond...')
       await updateUsersBondID(chaeryID, chaerybond)
       router.push(`/home/dashboard/${chaerybond}`)
     }
-
   }
 
   const getBondID = async (chaeryID: string) => {
-    const { data: bondData, error: bondError } = await supabase
-      .from('Users')
-      .select('bondID')
-      .eq('chaery_id', chaeryID)
+    const { data: bondData, error: bondError } = await supabase.from('Users').select('bondID').eq('chaery_id', chaeryID)
     if (bondError) {
       console.log('Error fetching bondID:', bondError)
     }
@@ -224,43 +220,45 @@ export default function Onboarding() {
   const handleRelationshipInit = async () => {
     setUpdates('Checking Chaery database...')
     try {
-      const { hasPartnerID: userPartnerID , returnedPartnerID: userReturnedPartnerID } = await checkIfPartnerIDExists(userChaeryID!) as { hasPartnerID: boolean; returnedPartnerID?: string }
-      const { hasPartnerID: targetPartnerID , returnedPartnerID: targetReturnedPartnerID } = await checkIfPartnerIDExists(partner.chaery_id!) as { hasPartnerID: boolean; returnedPartnerID?: string }
+      const { hasPartnerID: userPartnerID, returnedPartnerID: userReturnedPartnerID } = (await checkIfPartnerIDExists(
+        userChaeryID!,
+      )) as { hasPartnerID: boolean; returnedPartnerID?: string }
+      const { hasPartnerID: targetPartnerID, returnedPartnerID: targetReturnedPartnerID } =
+        (await checkIfPartnerIDExists(partner.chaery_id!)) as { hasPartnerID: boolean; returnedPartnerID?: string }
       console.log('User', userPartnerID, userReturnedPartnerID)
       console.log('Partner', targetPartnerID, targetReturnedPartnerID)
-     if (userPartnerID === false && targetPartnerID === false){
+      if (userPartnerID === false && targetPartnerID === false) {
         const { data: userUpdateData, error: userUpdateError } = await supabase
           .from('Users')
-          .update({ partner_id: partner.chaery_id})
+          .update({ partner_id: partner.chaery_id })
           .eq('chaery_id', userChaeryID)
 
         if (userUpdateError) {
           console.log('Error updating user:', userUpdateError)
-        }else{
+        } else {
           setUpdates(`${partner.firstName} is now your partner!`)
           await updateOnboardedStatus(userChaeryID!)
           await initRelationship(userChaeryID!)
         }
       }
-      if (userPartnerID === false && targetPartnerID === true){
+      if (userPartnerID === false && targetPartnerID === true) {
         console.log('User has no partner but partner has a partner')
         // Check if the partners id matched the user's partner id
         const doIDsMatch = targetReturnedPartnerID === userChaeryID
-        if (doIDsMatch){
+        if (doIDsMatch) {
           // If the IDs match, update the user's partner id
           const { data: userUpdateData, error: userUpdateError } = await supabase
             .from('Users')
-            .update({ partner_id: partner.chaery_id})
+            .update({ partner_id: partner.chaery_id })
             .eq('chaery_id', userChaeryID)
           if (userUpdateError) {
             console.log('Error updating user:', userUpdateError)
-          }else{
+          } else {
             setUpdates(`${partner.firstName} is now your partner!`)
-             await updateOnboardedStatus(userChaeryID!)
+            await updateOnboardedStatus(userChaeryID!)
             const bondID = await getBondID(partner.chaery_id!)
             updateUsersBondID(userChaeryID!, bondID)
             router.push(`/home/dashboard/${bondID}`)
-
           }
         }
       }
