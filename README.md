@@ -1,36 +1,23 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Chaery - Relationship Management Platform
 
-## Getting Started
+## Overview
 
-First, run the development server:
+Chaery is a comprehensive platform designed to help couples stay organized, communicate effectively, and enhance their relationship. With features focused on budget management, date planning, and decision-making, Chaery simplifies the complexities of maintaining a healthy and harmonious partnership.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Budget Management:** Keep track of shared expenses, set budget goals, and monitor spending patterns together.
+2. **Date Planning:** Plan and schedule memorable dates with ease, ensuring quality time is prioritized and enjoyed.
+3. **Decision-Making Tools:** Easily decide on various aspects of your relationship, such as where to eat or what activities to engage in.
+4. **Emotional Tracking:** Track emotional well-being and communication patterns to foster understanding and connection.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Frontend:** Next.js, TypeScript, Tailwind CSS
+- **Backend:** Supabase
+- **Database:** Supabase (PostgreSQL)
+- **Deployment:** Vercel
 
-## Learn More
+## License
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This project is licensed under the [MIT License](LICENSE).
