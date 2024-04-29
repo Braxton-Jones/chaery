@@ -1,7 +1,46 @@
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import ModalDrawer from './modalDrawer'
+import { dateFormat } from '@/lib/utils'
 
-export function RelationshipInfo() {
+type User = {
+  id: number
+  created_at: string
+  chaery_id: string
+  first_name: string
+  last_name: string
+  email: string
+  isOnboarded: boolean
+  partner_id: string
+  avatar_url: string
+  isDTF: boolean
+  bondID: string
+}
+type Relationship = {
+  id: number
+  created_at: string
+  anniversary: null | string // Null or string type for anniversary
+  spotify_playlist_id: null | string // Null or string type for Spotify playlist ID
+  chaery_link_id: string
+}
+
+export function RelationshipInfo({
+  currentUser,
+  partner,
+  relationship,
+}: {
+  currentUser: User
+  partner: User
+  relationship: Relationship
+}) {
   return (
     <div className="bg-white rounded-b-3xl shadow-lg p-6 dark:bg-gray-800 w-full">
       <div className="flex items-center justify-between">
@@ -11,43 +50,59 @@ export function RelationshipInfo() {
               alt="Partner 1"
               className="rounded-full"
               height={60}
-              src="/placeholder.svg"
+              src={currentUser?.avatar_url}
               style={{
                 aspectRatio: '60/60',
                 objectFit: 'cover',
               }}
               width={60}
             />
-            <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full dark:border-gray-800" />
+            {/* <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full dark:border-gray-800" /> */}
           </div>
           <div className="relative">
             <Image
               alt="Partner 2"
               className="rounded-full"
               height={60}
-              src="/placeholder.svg"
+              src={partner?.avatar_url}
               style={{
                 aspectRatio: '60/60',
                 objectFit: 'cover',
               }}
               width={60}
             />
-            <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full dark:border-gray-800" />
+            {/* <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full dark:border-gray-800" /> */}
           </div>
           <div className="px-4">
-            <h3 className="text-md font-semibold text-gray-900 dark:text-gray-100">John & Jane</h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400">June 15, 2020</p>
+            <h3 className="text-md font-semibold text-gray-900 dark:text-gray-100">
+              {currentUser.first_name} & {partner.first_name}
+            </h3>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              {relationship?.anniversary ? `${dateFormat(relationship?.anniversary)}` : 'No Anniversary Yet...'}
+            </p>
           </div>
         </div>
-        <div className="flex items-center space-x-4">
-          <Button size="icon" variant="ghost">
-            <SettingsIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-            <span className="sr-only">Settings</span>
-          </Button>
-          <Button size="icon" variant="ghost">
-            <BellIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-            <span className="sr-only">Notifications</span>
-          </Button>
+        <div className="flex items-center justify-between min-w-[75px]">
+          <ModalDrawer
+            title="Settings"
+            trigger={<SettingsIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />}
+            content={
+              <div className="m-5">
+                This action cannot be undone. This will permanently delete your account and remove your data from our
+                servers.
+              </div>
+            }
+          />
+          <ModalDrawer
+            title="Notifications"
+            trigger={<BellIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />}
+            content={
+              <div className="m-5">
+                This action cannot be undone. This will permanently delete your account and remove your data from our
+                servers.
+              </div>
+            }
+          />
         </div>
       </div>
     </div>

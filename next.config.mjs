@@ -4,13 +4,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'assets.example.com',
+        hostname: 'lh3.googleusercontent.com',
         port: '',
-        pathname: '/account123/**',
       },
     ],
   },
 }
 
 export default nextConfig
-;('lh3.googleusercontent.com')
