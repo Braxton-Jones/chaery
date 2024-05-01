@@ -58,5 +58,5 @@ export default async function DashboardLayout({
       <div></div>
       {children}
     </section>
-  );
+  )
 }

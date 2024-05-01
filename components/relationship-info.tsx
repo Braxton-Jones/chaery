@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import ModalDrawer from './modalDrawer'
 import { dateFormat } from '@/lib/utils'
+import EditRelationship from './edit-relationship'
 
 type User = {
   id: number
@@ -82,18 +83,20 @@ export function RelationshipInfo({
             </p>
           </div>
         </div>
-        <div className="flex items-center justify-between min-w-[75px]">
+        <div className="flex min-w-[75px] justify-end">
           <ModalDrawer
             title="Settings"
             trigger={<SettingsIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />}
             content={
-              <div className="m-5">
-                This action cannot be undone. This will permanently delete your account and remove your data from our
-                servers.
-              </div>
+              <EditRelationship
+                anniversary={relationship.anniversary}
+                currentUserAvatar={currentUser.avatar_url}
+                currentUserChaeryID={currentUser.chaery_id}
+                relationshipID={relationship.chaery_link_id}
+              />
             }
           />
-          <ModalDrawer
+          {/* <ModalDrawer
             title="Notifications"
             trigger={<BellIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />}
             content={
@@ -102,7 +105,7 @@ export function RelationshipInfo({
                 servers.
               </div>
             }
-          />
+          /> */}
         </div>
       </div>
     </div>

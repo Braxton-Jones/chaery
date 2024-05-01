@@ -1,14 +1,23 @@
-import { Budget } from '@/components/budget'
+import { Budget } from '@/components/budget_components/budget'
 import Schedule from '@/components/event_components/schedule'
 import UpcomingEvents from '@/components/event_components/upcoming-events'
 import GroceryList from '@/components/food_components/grocery-list'
 import MealVote from '@/components/food_components/meal-vote'
 import React from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
+type ScheduleProps = {
+    monday: string
+    tuesday: string
+    wednesday: string
+    thursday: string
+    friday: string
+    saturday: string
+    sunday: string
+}
 export type User = {
   id: number
   created_at: string
@@ -21,6 +30,7 @@ export type User = {
   avatar_url: string
   isDTF: boolean
   bondID: string
+  schedule: null | ScheduleProps
 }
 export type Relationship = {
   id: number
@@ -30,8 +40,7 @@ export type Relationship = {
   chaery_link_id: string
 }
 
-
-export default async function Dashboard(params: { params: { chaerybond: string }}) {
+export default async function Dashboard(params: { params: { chaerybond: string } }) {
   const chaerybond = params.params.chaerybond
   const cookieStore = cookies()
 
@@ -76,54 +85,44 @@ export default async function Dashboard(params: { params: { chaerybond: string }
 
   return (
     <main className="space-y-5 mx-4 mb-8">
-  <Tabs defaultValue="calendar" className="min-w-full">
-  <TabsList className='w-full'>
-    <TabsTrigger value="calendar" className='w-full'>Calendar</TabsTrigger>
-    <TabsTrigger value="budget" className='w-full'>Budget</TabsTrigger>
-    <TabsTrigger value="food" className='w-full'>Food & Grocery</TabsTrigger>
-  </TabsList>
-  <TabsContent value="calendar">
-  <section className="w-full h-full space-y-5">
-        <Schedule
-          name={CurrentUser.first_name}
-          schedule={{
-            monday: '9:00 AM - 5:00 PM',
-            tuesday: '1:00 AM - 2:00 PM',
-            wednesday: '9:00 AM - 5:00 PM',
-            thursday: '9:00 AM - 5:00 PM',
-            friday: '9:00 AM - 5:00 PM',
-            saturday: 'Off',
-            sunday: 'Off',
-          }}
-          isUser={true}
-        />
-        <Schedule
-          name={Partner.first_name}
-          schedule={{
-            monday: '9:00 AM - 5:00 PM',
-            tuesday: '9:00 AM - 5:00 PM',
-            wednesday: '9:00 AM - 5:00 PM',
-            thursday: '9:00 AM - 5:00 PM',
-            friday: '9:00 AM - 5:00 PM',
-            saturday: 'Off',
-            sunday: 'Off',
-          }}
-          isUser={false}
-        />
-      </section>
-  </TabsContent>
-  <TabsContent value="budget">
-  <section className="w-full h-full space-y-5">
-        <Budget />
-      </section>
-  </TabsContent>
-  <TabsContent value="food">
-  <section className="w-full h-full space-y-5">
-        <MealVote />
-        <GroceryList />
-      </section>
-  </TabsContent>
-</Tabs>
+      <Tabs defaultValue="calendar" className="min-w-full">
+        <TabsList className="w-full">
+          <TabsTrigger value="calendar" className="w-full">
+            Calendar
+          </TabsTrigger>
+          <TabsTrigger value="budget" className="w-full">
+            Budget
+          </TabsTrigger>
+          <TabsTrigger value="food" className="w-full">
+            Food & Grocery
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="calendar">
+          <section className="w-full h-full space-y-5">
+            <Schedule
+              name={CurrentUser.first_name}
+              schedule={CurrentUser.schedule}
+              isUser={true}
+            />
+            <Schedule
+              name={Partner.first_name}
+              schedule={Partner.schedule}
+              isUser={false}
+            />
+          </section>
+        </TabsContent>
+        <TabsContent value="budget">
+          <section className="w-full h-full space-y-5">
+            <Budget />
+          </section>
+        </TabsContent>
+        <TabsContent value="food">
+          <section className="w-full h-full space-y-5">
+            <MealVote />
+            <GroceryList />
+          </section>
+        </TabsContent>
+      </Tabs>
     </main>
   )
 }
