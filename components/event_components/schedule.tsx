@@ -15,7 +15,7 @@ type ScheduleProps = {
     friday: string
     saturday: string
     sunday: string
-  }
+  } | null
   isUser: boolean
 }
 

@@ -35,9 +35,6 @@ export default function EditRelationship({
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   )
   const router = useRouter()
-  const updateProfileImage = async () => {
-    // TODO: Implement image upload
-  }
 
   const logoutUser = async () => {
     supabase.auth.signOut()
@@ -55,28 +52,10 @@ export default function EditRelationship({
           <Separator />
         </section>
         <section className="grid gap-6">
-          <div className="grid gap-2 justify-center">
-            <Label htmlFor="avatar">Profile Image</Label>
-            <div className="flex items-center gap-8">
-              {currentUserAvatar && (
-                <Avatar className="h-20 w-20">
-                  <AvatarImage alt="@shadcn" src={`${currentUserAvatar}`} />
-                  <AvatarFallback>User</AvatarFallback>
-                </Avatar>
-              )}
-              <Button variant="outline">
-                <UploadIcon className="mr-2 h-4 w-4" />
-                Change Image
-              </Button>
-            </div>
-          </div>
-          <div className="grid gap-2 justify-center">
-            <Label htmlFor="anniversary">Anniversary</Label>
-          </div>
 
-          <div className="flex justify-between gap-4">
+          <div className="space-y-6">
             <AlertDialog>
-              <AlertDialogTrigger>
+              <AlertDialogTrigger className='w-full'>
                 <Button className="w-full bg-black-700 hover:bg-cherry_light-100">Disconnect from Partner</Button>
               </AlertDialogTrigger>
               <AlertDialogContent className="text-black">

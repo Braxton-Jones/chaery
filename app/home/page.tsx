@@ -74,6 +74,19 @@ export default async function Homepage() {
         console.log('User has completed the onboarding process and is in the database')
         console.log('Redirecting to the relationship page if they have a BondID')
         const bondID = userData && userData[0]?.bondID
+
+        // Checking if users avatar is different from the one in the database, if so update the avatar
+        if (userData && userAvatar !== userData[0]?.avatar_url) {
+          console.log('Updating user avatar')
+          const { data: updatedUser, error: updatedUserError } = await supabase
+            .from('Users')
+            .update({ avatar_url: userAvatar })
+            .eq('email', email)
+
+          if (updatedUserError) {
+            console.log('Error updating user avatar:', updatedUserError)
+          }
+        }
         redirect(`/home/dashboard/${bondID}`)
       }
     }

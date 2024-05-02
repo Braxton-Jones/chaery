@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import Calendar from '@/components/event_components/Calendar'
 
 type ScheduleProps = {
     monday: string
@@ -79,9 +80,9 @@ export default async function Dashboard(params: { params: { chaerybond: string }
 
   const userData = await getInfoFromChaeryBond()
   const relationshipData = await getRelationshipInfo()
-  const relationship = relationshipData?.[0]
-  const CurrentUser = userData?.find((user) => user.email === data.user.email)
-  const Partner = userData?.find((user) => user.email !== data.user.email)
+  const relationship : Relationship = relationshipData?.[0]
+  const CurrentUser : User = userData?.find((user) => user.email === data.user.email)
+  const Partner : User = userData?.find((user) => user.email !== data.user.email)
 
   return (
     <main className="space-y-5 mx-4 mb-8">
@@ -98,18 +99,11 @@ export default async function Dashboard(params: { params: { chaerybond: string }
           </TabsTrigger>
         </TabsList>
         <TabsContent value="calendar">
-          <section className="w-full h-full space-y-5">
-            <Schedule
-              name={CurrentUser.first_name}
-              schedule={CurrentUser.schedule}
-              isUser={true}
-            />
-            <Schedule
-              name={Partner.first_name}
-              schedule={Partner.schedule}
-              isUser={false}
-            />
-          </section>
+          <Calendar
+            currentUser={CurrentUser}
+            partner={Partner}
+            relationship={relationship}
+          />
         </TabsContent>
         <TabsContent value="budget">
           <section className="w-full h-full space-y-5">

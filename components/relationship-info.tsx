@@ -9,8 +9,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import ModalDrawer from './modalDrawer'
-import { dateFormat } from '@/lib/utils'
 import EditRelationship from './edit-relationship'
+import Anniversary from './edit-anniversary'
 
 type User = {
   id: number
@@ -78,9 +78,10 @@ export function RelationshipInfo({
             <h3 className="text-md font-semibold text-gray-900 dark:text-gray-100">
               {currentUser.first_name} & {partner.first_name}
             </h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              {relationship?.anniversary ? `${dateFormat(relationship?.anniversary)}` : 'No Anniversary Yet...'}
-            </p>
+            <Anniversary 
+            anniversary={relationship.anniversary}
+            chaeryLinkID={relationship.chaery_link_id}
+             />
           </div>
         </div>
         <div className="flex min-w-[75px] justify-end">
