@@ -11,13 +11,13 @@ import { redirect } from 'next/navigation'
 import Calendar from '@/components/event_components/Calendar'
 
 type ScheduleProps = {
-    monday: string
-    tuesday: string
-    wednesday: string
-    thursday: string
-    friday: string
-    saturday: string
-    sunday: string
+  monday: string
+  tuesday: string
+  wednesday: string
+  thursday: string
+  friday: string
+  saturday: string
+  sunday: string
 }
 export type User = {
   id: number
@@ -80,9 +80,9 @@ export default async function Dashboard(params: { params: { chaerybond: string }
 
   const userData = await getInfoFromChaeryBond()
   const relationshipData = await getRelationshipInfo()
-  const relationship : Relationship = relationshipData?.[0]
-  const CurrentUser : User = userData?.find((user) => user.email === data.user.email)
-  const Partner : User = userData?.find((user) => user.email !== data.user.email)
+  const relationship: Relationship = relationshipData?.[0]
+  const CurrentUser: User = userData?.find((user) => user.email === data.user.email)
+  const Partner: User = userData?.find((user) => user.email !== data.user.email)
 
   return (
     <main className="space-y-5 mx-4 mb-8">
@@ -99,11 +99,7 @@ export default async function Dashboard(params: { params: { chaerybond: string }
           </TabsTrigger>
         </TabsList>
         <TabsContent value="calendar">
-          <Calendar
-            currentUser={CurrentUser}
-            partner={Partner}
-            relationship={relationship}
-          />
+          <Calendar currentUser={CurrentUser} partner={Partner} relationship={relationship} />
         </TabsContent>
         <TabsContent value="budget">
           <section className="w-full h-full space-y-5">

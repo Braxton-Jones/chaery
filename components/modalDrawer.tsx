@@ -29,7 +29,7 @@ export default function ModalDrawer({ trigger, title, content }: ModalInfoProps)
     <section className="text-black">
       <Dialog>
         <DialogTrigger className="hidden sm:block">{trigger}</DialogTrigger>
-        <DialogContent>
+        <DialogContent className="bg-white text-black-100">
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{content}</DialogDescription>
@@ -38,14 +38,14 @@ export default function ModalDrawer({ trigger, title, content }: ModalInfoProps)
       </Dialog>
       <Drawer>
         <DrawerTrigger className="block sm:hidden">{trigger}</DrawerTrigger>
-        <DrawerContent className="bg-white-500 border-cherry_light-700 border-2 text-black">
+        <DrawerContent className="text-black-100">
           <DrawerHeader>
             <DrawerTitle>{title}</DrawerTitle>
             <DrawerDescription>{content}</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full bg-cherry_medium-700 text-white">
                 Close
               </Button>
             </DrawerClose>

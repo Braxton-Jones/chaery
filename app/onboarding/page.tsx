@@ -29,7 +29,6 @@ type ParamTypes = {
 }
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
-import PopupModal from '@/components/generic-modal'
 import { set } from 'date-fns'
 
 type PartnerType = {
@@ -280,12 +279,12 @@ export default function Onboarding() {
               <div className="flex items-center flex-col space-y-4">
                 <div className="flex flex-col gap-2 ">
                   <h3 className="text-xl font-semibold">User Found!</h3>
-                  <p className="text-sm">
+                  <p className="text-sm text-center">
                     {partner.firstName} {partner.lastName}
                   </p>
                 </div>
                 <Avatar className="w-24 h-24">
-                  <AvatarImage src="/public/test.jpg" />
+                  <AvatarImage src={partner.avatar} />
                   <AvatarFallback>Partner</AvatarFallback>
                 </Avatar>
                 <p className="text-sm">Chaery ID: {partner.chaery_id}</p>
@@ -341,7 +340,7 @@ export default function Onboarding() {
               <Button
                 className="w-fit bg-cherry_light-700  h-fit py-0.5"
                 // dont forget to change this to the actual chaery id
-                onClick={() => navigator.clipboard.writeText('chaery-YSOGuG2d')}
+                onClick={() => navigator.clipboard.writeText(userChaeryID!)}
               >
                 {userChaeryID ? userChaeryID : 'Loading...'}
               </Button>

@@ -276,6 +276,7 @@ const config = {
       },
       fontFamily: {
         nunito_sans: 'var(--font-nunito-sans)',
+        inter: 'var(--font-inter)',
       },
       borderRadius: {
         lg: 'var(--radius)',

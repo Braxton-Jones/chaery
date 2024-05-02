@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Nunito_Sans } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import './globals.css'
 import WidthProvider from '@/components/width-provider'
 
@@ -7,6 +8,12 @@ const nunito_sans = Nunito_Sans({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
   variable: '--font-nunito-sans',
+})
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-inter',
 })
 
 export const metadata: Metadata = {
@@ -21,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${nunito_sans.variable} bg-black-300 text-white min-h-full flex justify-center`}>
+      <body className={`${inter.variable} bg-black-300 text-white min-h-full flex justify-center`}>
         <WidthProvider>{children}</WidthProvider>
       </body>
     </html>

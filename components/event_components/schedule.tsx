@@ -17,10 +17,10 @@ type ScheduleProps = {
     sunday: string
   } | null
   isUser: boolean
+  chaerybond: string | null | undefined
 }
 
-export default function Schedule({ name, schedule, isUser }: ScheduleProps) {
-  console.log(schedule)
+export default function Schedule({ name, schedule, isUser, chaerybond }: ScheduleProps) {
   return (
     <Card>
       <CardHeader>
@@ -28,55 +28,55 @@ export default function Schedule({ name, schedule, isUser }: ScheduleProps) {
         <CardDescription>Updated 1 day</CardDescription>
         {isUser && (
           <ModalDrawer
-            title="Edit Schedule"
+            title="What's your schedule?"
             trigger={<p>Edit Schedule</p>}
-            content={<EditSchedule schedule={schedule} />}
+            content={<EditSchedule schedule={schedule} chaerybond={chaerybond} />}
           />
         )}
       </CardHeader>
       {schedule !== null ? (
         <Accordion type="single" collapsible>
-        <AccordionItem value="item-1">
-          <AccordionTrigger className='p-0 px-6 pb-4'>Show Schedule</AccordionTrigger>
-          <AccordionContent>
-            <CardContent className="space-y-2">
-              <div className="flex flex-row items-center justify-between mb-4">
-                <p className="font-medium text-sm">Monday:</p>
-                <p className="text-white-300">{schedule.monday}</p>
-              </div>
-              <div className="flex flex-row items-center justify-between mb-4">
-                <p className="font-medium text-sm">Tuesday:</p>
-                <p className="text-white-300">{schedule.tuesday}</p>
-              </div>
-              <div className="flex flex-row items-center justify-between mb-4">
-                <p className="font-medium text-sm">Wednesday:</p>
-                <p className="text-white-300">{schedule.wednesday}</p>
-              </div>
-              <div className="flex flex-row items-center justify-between mb-4">
-                <p className="font-medium text-sm">Thursday:</p>
-                <p className="text-white-300">{schedule.thursday}</p>
-              </div>
-              <div className="flex flex-row items-center justify-between mb-4">
-                <p className="font-medium text-sm">Friday:</p>
-                <p className="text-white-300">{schedule.friday}</p>
-              </div>
-              <div className="flex flex-row items-center justify-between mb-4">
-                <p className="font-medium text-sm">Saturday:</p>
-                <p className="text-white-300">{schedule.saturday}</p>
-              </div>
-              <div className="flex flex-row items-center justify-between mb-4">
-                <p className="font-medium text-sm">Sunday:</p>
-                <p className="text-white-300">{schedule.sunday}</p>
-              </div>
-            </CardContent>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion> 
-      ) : <div>
-        <p className='p-0 px-6 pb-4'>No Schedule Yet.</p>
-      </div> }
-      
-       
+          <AccordionItem value="item-1">
+            <AccordionTrigger className="p-0 px-6 pb-4">Show Schedule</AccordionTrigger>
+            <AccordionContent>
+              <CardContent className="space-y-2">
+                <div className="flex flex-row items-center justify-between mb-4">
+                  <p className="font-medium text-sm">Monday:</p>
+                  <p className="text-white-300">{schedule?.monday}</p>
+                </div>
+                <div className="flex flex-row items-center justify-between mb-4">
+                  <p className="font-medium text-sm">Tuesday:</p>
+                  <p className="text-white-300">{schedule?.tuesday}</p>
+                </div>
+                <div className="flex flex-row items-center justify-between mb-4">
+                  <p className="font-medium text-sm">Wednesday:</p>
+                  <p className="text-white-300">{schedule?.wednesday}</p>
+                </div>
+                <div className="flex flex-row items-center justify-between mb-4">
+                  <p className="font-medium text-sm">Thursday:</p>
+                  <p className="text-white-300">{schedule?.thursday}</p>
+                </div>
+                <div className="flex flex-row items-center justify-between mb-4">
+                  <p className="font-medium text-sm">Friday:</p>
+                  <p className="text-white-300">{schedule?.friday}</p>
+                </div>
+                <div className="flex flex-row items-center justify-between mb-4">
+                  <p className="font-medium text-sm">Saturday:</p>
+                  <p className="text-white-300">{schedule?.saturday}</p>
+                </div>
+                <div className="flex flex-row items-center justify-between mb-4">
+                  <p className="font-medium text-sm">Sunday:</p>
+                  <p className="text-white-300">{schedule?.sunday}</p>
+                </div>
+              </CardContent>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      ) : (
+        <div>
+          <p className="p-0 px-6 pb-4">No Schedule Yet.</p>
+        </div>
+      )}
     </Card>
   )
 }

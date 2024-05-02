@@ -61,7 +61,7 @@ export function RelationshipInfo({
             {/* <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full dark:border-gray-800" /> */}
           </div>
           <div className="relative">
-            <Image
+            {partner ? ( <Image
               alt="Partner 2"
               className="rounded-full"
               height={60}
@@ -71,20 +71,18 @@ export function RelationshipInfo({
                 objectFit: 'cover',
               }}
               width={60}
-            />
+            />) : null}
+            
             {/* <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full dark:border-gray-800" /> */}
           </div>
           <div className="px-4">
             <h3 className="text-md font-semibold text-gray-900 dark:text-gray-100">
-              {currentUser.first_name} & {partner.first_name}
+              {currentUser.first_name} & {partner ? partner?.first_name : 'their partner'}
             </h3>
-            <Anniversary 
-            anniversary={relationship.anniversary}
-            chaeryLinkID={relationship.chaery_link_id}
-             />
+            <Anniversary anniversary={relationship.anniversary} chaeryLinkID={relationship.chaery_link_id} />
           </div>
         </div>
-        <div className="flex min-w-[75px] justify-end">
+        <div className="flex justify-end">
           <ModalDrawer
             title="Settings"
             trigger={<SettingsIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />}

@@ -56,7 +56,8 @@ export default async function DashboardLayout({
     <section className="w-full flex flex-col gap-3 self-start">
       <RelationshipInfo currentUser={CurrentUser} partner={Partner} relationship={relationship} />
       <div></div>
-      {children}
+      {Partner ? (children): <div>Waiting on partner to join...</div>}
+      {/* {children} */}
     </section>
   )
 }

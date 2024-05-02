@@ -52,10 +52,9 @@ export default function EditRelationship({
           <Separator />
         </section>
         <section className="grid gap-6">
-
           <div className="space-y-6">
             <AlertDialog>
-              <AlertDialogTrigger className='w-full'>
+              <AlertDialogTrigger className="w-full">
                 <Button className="w-full bg-black-700 hover:bg-cherry_light-100">Disconnect from Partner</Button>
               </AlertDialogTrigger>
               <AlertDialogContent className="text-black">
@@ -68,12 +67,14 @@ export default function EditRelationship({
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={disconnectUser}>Continue</AlertDialogAction>
+                  <AlertDialogAction onClick={disconnectUser} className="bg-cherry_light-700">
+                    Continue
+                  </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
 
-            <Button className="w-full bg-cherry_light-200 hover:bg-cherry_light-300" onClick={logoutUser}>
+            <Button className="w-full bg-cherry_light-700 hover:bg-cherry_medium-600" onClick={logoutUser}>
               Log Out
             </Button>
           </div>

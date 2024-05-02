@@ -1,13 +1,20 @@
 import React from 'react'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '../ui/button'
 
-{/*
-    This will be a calendar component similar to https://www.youtube.com/watch?v=9ySmMd5Cjc0
-    We will also display the first three events in the calendar where the user can click on the event to view more details
-
-
-*/}
 export default function RelationshipCalendar() {
   return (
-    <div>Events</div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Your Events</CardTitle>
+        <CardDescription>You have 12 upcoming events</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p>Card Content</p>
+      </CardContent>
+      <CardFooter>
+        <Button className="w-full bg-cherry_medium-600 hover:bg-cherry_light-500">Create a new event</Button>
+      </CardFooter>
+    </Card>
   )
 }

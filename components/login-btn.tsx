@@ -25,7 +25,9 @@ export default function LoginBtn() {
   }
   return (
     <>
-      <Button onClick={handleLogin}>Sign in with Google</Button>
+      <Button onClick={handleLogin} className="bg-cherry_light-700 hover:bg-cherry_light-800">
+        Sign into Chaery
+      </Button>
     </>
   )
 }
