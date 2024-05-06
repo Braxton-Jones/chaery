@@ -1,13 +1,4 @@
-import { Button } from '@/components/ui/button'
 import Image from 'next/image'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
 import ModalDrawer from './modalDrawer'
 import EditRelationship from './edit-relationship'
 import Anniversary from './edit-anniversary'
@@ -28,8 +19,8 @@ type User = {
 type Relationship = {
   id: number
   created_at: string
-  anniversary: null | string // Null or string type for anniversary
-  spotify_playlist_id: null | string // Null or string type for Spotify playlist ID
+  anniversary: null | string
+  spotify_playlist_id: null | string
   chaery_link_id: string
 }
 
@@ -43,7 +34,7 @@ export function RelationshipInfo({
   relationship: Relationship
 }) {
   return (
-    <div className="bg-white rounded-b-3xl shadow-lg p-6 dark:bg-gray-800 w-full">
+    <div className="bg-white rounded-b-3xl shadow-lg p-6 dark:bg-gray-800 mx-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <div className="relative">
@@ -61,18 +52,20 @@ export function RelationshipInfo({
             {/* <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full dark:border-gray-800" /> */}
           </div>
           <div className="relative">
-            {partner ? ( <Image
-              alt="Partner 2"
-              className="rounded-full"
-              height={60}
-              src={partner?.avatar_url}
-              style={{
-                aspectRatio: '60/60',
-                objectFit: 'cover',
-              }}
-              width={60}
-            />) : null}
-            
+            {partner ? (
+              <Image
+                alt="Partner 2"
+                className="rounded-full"
+                height={60}
+                src={partner?.avatar_url}
+                style={{
+                  aspectRatio: '60/60',
+                  objectFit: 'cover',
+                }}
+                width={60}
+              />
+            ) : null}
+
             {/* <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full dark:border-gray-800" /> */}
           </div>
           <div className="px-4">

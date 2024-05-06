@@ -9,5 +9,5 @@ export default async function OnboardingLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return <section className='flex items-center'>{children}</section>
+  return <section className="flex items-center">{children}</section>
 }

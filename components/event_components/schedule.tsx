@@ -8,13 +8,20 @@ import EditSchedule from './edit-schedule'
 type ScheduleProps = {
   name: string
   schedule: {
-    monday: string
-    tuesday: string
-    wednesday: string
-    thursday: string
-    friday: string
-    saturday: string
-    sunday: string
+    monday_start: string | null
+    monday_end: string | null
+    tuesday_start: string | null
+    tuesday_end: string | null
+    wednesday_start: string | null
+    wednesday_end: string | null
+    thursday_start: string | null
+    thursday_end: string | null
+    friday_start: string | null
+    friday_end: string | null
+    saturday_start: string | null
+    saturday_end: string | null
+    sunday_start: string | null
+    sunday_end: string | null
   } | null
   isUser: boolean
   chaerybond: string | null | undefined
@@ -42,31 +49,31 @@ export default function Schedule({ name, schedule, isUser, chaerybond }: Schedul
               <CardContent className="space-y-2">
                 <div className="flex flex-row items-center justify-between mb-4">
                   <p className="font-medium text-sm">Monday:</p>
-                  <p className="text-white-300">{schedule?.monday}</p>
+                  <p className="text-white-300">{schedule?.monday_start}</p>
                 </div>
                 <div className="flex flex-row items-center justify-between mb-4">
                   <p className="font-medium text-sm">Tuesday:</p>
-                  <p className="text-white-300">{schedule?.tuesday}</p>
+                  <p className="text-white-300">{schedule?.tuesday_start}</p>
                 </div>
                 <div className="flex flex-row items-center justify-between mb-4">
                   <p className="font-medium text-sm">Wednesday:</p>
-                  <p className="text-white-300">{schedule?.wednesday}</p>
+                  <p className="text-white-300">{schedule?.wednesday_start}</p>
                 </div>
                 <div className="flex flex-row items-center justify-between mb-4">
                   <p className="font-medium text-sm">Thursday:</p>
-                  <p className="text-white-300">{schedule?.thursday}</p>
+                  <p className="text-white-300">{schedule?.thursday_start}</p>
                 </div>
                 <div className="flex flex-row items-center justify-between mb-4">
                   <p className="font-medium text-sm">Friday:</p>
-                  <p className="text-white-300">{schedule?.friday}</p>
+                  <p className="text-white-300">{schedule?.friday_start}</p>
                 </div>
                 <div className="flex flex-row items-center justify-between mb-4">
                   <p className="font-medium text-sm">Saturday:</p>
-                  <p className="text-white-300">{schedule?.saturday}</p>
+                  <p className="text-white-300">{schedule?.saturday_start}</p>
                 </div>
                 <div className="flex flex-row items-center justify-between mb-4">
                   <p className="font-medium text-sm">Sunday:</p>
-                  <p className="text-white-300">{schedule?.sunday}</p>
+                  <p className="text-white-300">{schedule?.sunday_start}</p>
                 </div>
               </CardContent>
             </AccordionContent>

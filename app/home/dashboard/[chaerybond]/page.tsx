@@ -11,13 +11,20 @@ import { redirect } from 'next/navigation'
 import Calendar from '@/components/event_components/Calendar'
 
 type ScheduleProps = {
-  monday: string
-  tuesday: string
-  wednesday: string
-  thursday: string
-  friday: string
-  saturday: string
-  sunday: string
+  monday_start: string | null
+  monday_end: string | null
+  tuesday_start: string | null
+  tuesday_end: string | null
+  wednesday_start: string | null
+  wednesday_end: string | null
+  thursday_start: string | null
+  thursday_end: string | null
+  friday_start: string | null
+  friday_end: string | null
+  saturday_start: string | null
+  saturday_end: string | null
+  sunday_start: string | null
+  sunday_end: string | null
 }
 export type User = {
   id: number

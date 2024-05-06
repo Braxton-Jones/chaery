@@ -13,7 +13,7 @@ export default function RelationshipCalendar() {
         <p>Card Content</p>
       </CardContent>
       <CardFooter>
-        <Button className="w-full bg-cherry_medium-600 hover:bg-cherry_light-500">Create a new event</Button>
+        <Button className="w-full bg-cherry_medium-700 hover:bg-cherry_light-800 mx-3">Create a new event</Button>
       </CardFooter>
     </Card>
   )

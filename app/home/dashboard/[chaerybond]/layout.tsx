@@ -53,10 +53,10 @@ export default async function DashboardLayout({
   const childrenData = [CurrentUser, Partner, relationship]
 
   return (
-    <section className="w-full flex flex-col gap-3 self-start">
+    <section className="w-full flex flex-col gap-3 self-start ">
       <RelationshipInfo currentUser={CurrentUser} partner={Partner} relationship={relationship} />
       <div></div>
-      {Partner ? (children): <div>Waiting on partner to join...</div>}
+      {Partner ? children : <div>Waiting on partner to join...</div>}
       {/* {children} */}
     </section>
   )
