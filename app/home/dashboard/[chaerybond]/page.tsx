@@ -39,6 +39,7 @@ export type User = {
   isDTF: boolean
   bondID: string
   schedule: null | ScheduleProps
+  last_schedule_update: string | null
 }
 export type Relationship = {
   id: number

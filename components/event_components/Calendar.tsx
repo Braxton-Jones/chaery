@@ -13,16 +13,26 @@ export default function Calendar({
   partner: Partner,
   relationship: Relationship,
 }: CalendarProps) {
+  const yourSchedule = JSON.parse(CurrentUser.schedule)
+  const partnerSchedule = JSON.parse(Partner?.schedule)
+  console.log(yourSchedule, partnerSchedule)
   return (
     <section className="w-full h-full space-y-5">
       <RelationshipCalendar />
       <Schedule
         name={CurrentUser.first_name}
-        schedule={CurrentUser.schedule}
+        schedule={yourSchedule}
+        last_updated={CurrentUser.last_schedule_update}
         isUser={true}
         chaerybond={CurrentUser.chaery_id}
       />
-      <Schedule name={Partner?.first_name} schedule={Partner?.schedule} isUser={false} chaerybond={null} />
+      <Schedule
+        name={Partner?.first_name}
+        schedule={partnerSchedule}
+        isUser={false}
+        chaerybond={null}
+        last_updated={Partner?.last_schedule_update}
+      />
     </section>
   )
 }

@@ -41,7 +41,7 @@ export default function ModalDrawer({ trigger, title, content }: ModalInfoProps)
         <DrawerContent className="text-black-100">
           <DrawerHeader>
             <DrawerTitle>{title}</DrawerTitle>
-            <DrawerDescription>{content}</DrawerDescription>
+            <DrawerDescription className="">{content}</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose>
