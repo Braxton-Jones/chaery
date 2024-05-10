@@ -2,8 +2,27 @@ import { Button } from '@/components/ui/button'
 import { TabsTrigger, TabsList, TabsContent, Tabs } from '@/components/ui/tabs'
 import { CardTitle, CardHeader, CardContent, Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
+import FinancialOverview from './overview'
+import FinancialGoals from './goals'
+import FinancialResponsibilities from './bills'
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
 export function Budget() {
+  const cookieStore = cookies()
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value
+        },
+      },
+    },
+  )
+
   return (
     <div className="flex flex-col h-full w-full  mx-auto p-6 md:p-10 bg-white dark:bg-gray-950 rounded-lg shadow-lg text-black-100">
       <header className="flex items-center justify-between mb-6">
@@ -19,236 +38,26 @@ export function Budget() {
           </Button>
         </div>
       </header>
-      <Tabs className="" defaultValue="bills">
+      <Tabs className="" defaultValue="overview">
         <TabsList className="w-full bg-black-900">
+          <TabsTrigger value="overview" className="w-full">
+            Overview
+          </TabsTrigger>
           <TabsTrigger value="bills" className="w-full">
             Bills
           </TabsTrigger>
           <TabsTrigger value="goals" className="w-full">
-            Savings Goals
-          </TabsTrigger>
-          <TabsTrigger value="spending" className="w-full">
-            Spending
-          </TabsTrigger>
-          <TabsTrigger value="wiki" className="w-full">
-            Notes
+            Goals
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="bills">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-lg p-4 border-2">
-              <h3 className="text-lg font-semibold mb-2">Spending Breakdown</h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">You</p>
-                    <p className="text-xl font-bold">$1,200</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">Partner</p>
-                    <p className="text-xl font-bold">$900</p>
-                  </div>
-                </div>
-                <Progress className="w-full" value={57} />
-                <p className="text-gray-500 dark:text-gray-400 text-sm">
-                  You&apos;ve contributed 57% of the total spending.
-                </p>
-              </div>
-            </div>
-            <Card>
-              <CardHeader>
-                <CardTitle>Next Bill</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 dark:text-gray-400">Due Date:</span>
-                    <span className="font-medium">May 15, 2023</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 dark:text-gray-400">Amount:</span>
-                    <span className="font-medium">$125.00</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 dark:text-gray-400">Utility:</span>
-                    <span className="font-medium">Electricity</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Upcoming Bills</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 dark:text-gray-400">Rent:</span>
-                    <span className="font-medium">$1,500.00</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 dark:text-gray-400">Internet:</span>
-                    <span className="font-medium">$50.00</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500 dark:text-gray-400">Phone:</span>
-                    <span className="font-medium">$80.00</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+        <TabsContent value="overview">
+          <FinancialOverview />
         </TabsContent>
         <TabsContent value="goals">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold">Savings Goals</h2>
-              <Button size="sm" variant="outline">
-                <PlusIcon className="h-4 w-4 mr-2" />
-                Add Goal
-              </Button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Vacation Fund</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Goal:</span>
-                      <span className="font-medium">$5,000</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Current:</span>
-                      <span className="font-medium">$3,250</span>
-                    </div>
-                    <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-2">
-                      <div
-                        className="bg-blue-500 h-2 rounded-full"
-                        style={{
-                          width: '65%',
-                        }}
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Emergency Fund</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Goal:</span>
-                      <span className="font-medium">$10,000</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Current:</span>
-                      <span className="font-medium">$7,500</span>
-                    </div>
-                    <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-2">
-                      <div
-                        className="bg-blue-500 h-2 rounded-full"
-                        style={{
-                          width: '75%',
-                        }}
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+          <FinancialGoals />
         </TabsContent>
-        <TabsContent value="spending">
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold">Spending Breakdown</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Your Spending</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Rent:</span>
-                      <span className="font-medium">$750.00</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Groceries:</span>
-                      <span className="font-medium">$300.00</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Entertainment:</span>
-                      <span className="font-medium">$150.00</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Partner&apos;s Spending</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Rent:</span>
-                      <span className="font-medium">$750.00</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Groceries:</span>
-                      <span className="font-medium">$200.00</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Entertainment:</span>
-                      <span className="font-medium">$100.00</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </TabsContent>
-        <TabsContent value="wiki">
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold">Couples Wiki</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Communication Tips</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <p>Effective communication is key to a healthy relationship. Here are some tips:</p>
-                    <ul className="list-disc pl-4 space-y-1">
-                      <li>Listen actively and avoid interrupting</li>
-                      <li>Use &quot;I&quot; statements to express your feelings</li>
-                      <li>Avoid criticism and instead focus on solutions</li>
-                      <li>Schedule regular check-ins to discuss any issues</li>
-                    </ul>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Conflict Resolution</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <p>Disagreements are normal in any relationship. Here are some tips for resolving conflicts:</p>
-                    <ul className="list-disc pl-4 space-y-1">
-                      <li>Stay calm and avoid escalating the situation</li>
-                      <li>Focus on the issue at hand, not personal attacks</li>
-                      <li>Compromise and find a solution that works for both of you</li>
-                      <li>Seek professional help if you&apos;re unable to resolve the conflict on your own</li>
-                    </ul>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+        <TabsContent value="bills">
+          <FinancialResponsibilities />
         </TabsContent>
       </Tabs>
     </div>

@@ -43,8 +43,6 @@ type SubmitProps = {
 }
 
 export default function EditSchedule({ schedule, chaerybond }: EditProps) {
-  console.log(schedule)
-  console.log(chaerybond)
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

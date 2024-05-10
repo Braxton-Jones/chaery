@@ -15,7 +15,6 @@ export default function Calendar({
 }: CalendarProps) {
   const yourSchedule = JSON.parse(CurrentUser.schedule)
   const partnerSchedule = JSON.parse(Partner?.schedule)
-  console.log(yourSchedule, partnerSchedule)
   return (
     <section className="w-full h-full space-y-5">
       <RelationshipCalendar />

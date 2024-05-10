@@ -45,7 +45,7 @@ export default function ModalDrawer({ trigger, title, content }: ModalInfoProps)
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose>
-              <Button variant="outline" className="w-full bg-cherry_medium-700 text-white">
+              <Button variant="outline" className="w-full bg-black-700 text-white">
                 Close
               </Button>
             </DrawerClose>

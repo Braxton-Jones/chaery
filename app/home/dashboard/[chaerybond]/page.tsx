@@ -1,4 +1,4 @@
-import { Budget } from '@/components/budget_components/budget'
+import { Budget } from '@/components/budget_components/Budget'
 import Schedule from '@/components/event_components/schedule'
 import UpcomingEvents from '@/components/event_components/upcoming-events'
 import GroceryList from '@/components/food_components/grocery-list'
