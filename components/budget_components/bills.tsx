@@ -1,54 +1,55 @@
 import React from 'react'
 import { CardTitle, CardHeader, CardContent, Card } from '@/components/ui/card'
-
+import { DataTable } from './bill-table'
+import { columns } from './bill-columns'
+import { Bill } from './bill-columns'
+import editIcon from '@/public/edit.svg'
+import plus from '@/public/plus.svg'
+import Image from 'next/image'
 export default function FinancialResponsibilities() {
+  const bills : Bill[] = [
+    {
+      category: "Rent",
+      dueDate: "2022-01-01",
+      amount: 750,
+      company: "Landlord"
+    },
+    {
+      category: "Utilities",
+      dueDate: "2022-01-15",
+      amount: 150,
+      company: "Electric Company"
+    },
+    {
+      category: "Food",
+      dueDate: "2022-01-20",
+      amount: 300,
+      company: "Grocery Store"
+    }
+  ]
   return (
-    <div className="space-y-4">
-      {/* <h2 className="text-xl font-bold">Spending Breakdown</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Your Spending</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Rent:</span>
-                      <span className="font-medium">$750.00</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Groceries:</span>
-                      <span className="font-medium">$300.00</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Entertainment:</span>
-                      <span className="font-medium">$150.00</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Partner&apos;s Spending</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Rent:</span>
-                      <span className="font-medium">$750.00</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Groceries:</span>
-                      <span className="font-medium">$200.00</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Entertainment:</span>
-                      <span className="font-medium">$100.00</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div> */}
+    <div className="mt-4 space-y-4">
+      <h2 className="font-bold bg-cherry_light-700 p-2 w-fit rounded-md text-sm text-white-700">Bills Overview</h2>
+      <div className='space-y-1 flex flex-col items-center w-full '>
+      <DataTable
+      columns={columns}
+      data={bills}
+      />
+      <div className='
+  bg-cherry_light-700 
+  text-sm 
+  py-1 px-2 
+  rounded-md 
+  w-fit 
+  self-center 
+  cursor-pointer
+  hover:px-4
+  transition-all
+  '>
+    <Image src={plus} alt="plus icon" width={15} height={15} />
+</div>
+      </div>
+
     </div>
   )
 }

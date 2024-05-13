@@ -34,7 +34,14 @@ export default async function FinancialGoals({ chaery_bond }: { chaery_bond: str
       },
     },
   )
+  const user = supabase.auth.getUser(); // Get the authenticated user first
+  if (!user) {
+    // Handle the case where the user is not authenticated
+    console.error('User is not authenticated.');
+    return null;
+  }
 
+ 
   const getGoals = async () => {
     const { data: goals, error } = await supabase.from('Goals').select('*').eq('chaery_link', chaery_bond)
     if (error) {
@@ -42,8 +49,7 @@ export default async function FinancialGoals({ chaery_bond }: { chaery_bond: str
     }
     return goals
   }
-  const goals = await getGoals()
-  console.log(goals)
+   const goals = await getGoals()
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
