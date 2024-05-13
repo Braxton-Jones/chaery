@@ -1,8 +1,24 @@
 import React from 'react'
 import { CardTitle, CardHeader, CardContent, Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
-export default function FinancialOverview() {
+export default async function FinancialOverview({ chaery_bond }: { chaery_bond: string }) {
+  const cookieStore = cookies()
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value
+        },
+      },
+    },
+  )
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div className="bg-white rounded-lg p-4 border-2">

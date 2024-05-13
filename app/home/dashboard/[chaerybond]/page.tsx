@@ -102,8 +102,8 @@ export default async function Dashboard(params: { params: { chaerybond: string }
           <TabsTrigger value="budget" className="w-full">
             Budget
           </TabsTrigger>
-          <TabsTrigger value="food" className="w-full">
-            Food & Grocery
+          <TabsTrigger value="board" className="w-full">
+            Board
           </TabsTrigger>
         </TabsList>
         <TabsContent value="calendar">
@@ -111,12 +111,11 @@ export default async function Dashboard(params: { params: { chaerybond: string }
         </TabsContent>
         <TabsContent value="budget">
           <section className="w-full h-full space-y-5">
-            <Budget />
+            <Budget currentUser={CurrentUser} relationship={relationship} />
           </section>
         </TabsContent>
-        <TabsContent value="food">
+        <TabsContent value="board">
           <section className="w-full h-full space-y-5">
-            <MealVote />
             <GroceryList />
           </section>
         </TabsContent>

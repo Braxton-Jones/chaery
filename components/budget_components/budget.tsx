@@ -7,21 +7,10 @@ import FinancialGoals from './goals'
 import FinancialResponsibilities from './bills'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { User, Relationship } from '@/app/home/dashboard/[chaerybond]/page'
 
-export function Budget() {
-  const cookieStore = cookies()
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value
-        },
-      },
-    },
-  )
+export async function Budget({ currentUser, relationship }: { currentUser: User; relationship: Relationship }) {
+  const chaery_bond = currentUser.bondID
 
   return (
     <div className="flex flex-col h-full w-full  mx-auto p-6 md:p-10 bg-white dark:bg-gray-950 rounded-lg shadow-lg text-black-100">
@@ -51,10 +40,10 @@ export function Budget() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="overview">
-          <FinancialOverview />
+          <FinancialOverview chaery_bond={chaery_bond} />
         </TabsContent>
         <TabsContent value="goals">
-          <FinancialGoals />
+          <FinancialGoals chaery_bond={chaery_bond} />
         </TabsContent>
         <TabsContent value="bills">
           <FinancialResponsibilities />

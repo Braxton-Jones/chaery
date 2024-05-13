@@ -3,6 +3,7 @@ import { Nunito_Sans } from 'next/font/google'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import WidthProvider from '@/components/width-provider'
+import { Toaster } from '@/components/ui/sonner'
 
 const nunito_sans = Nunito_Sans({
   subsets: ['latin'],
@@ -30,6 +31,7 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <body className={`${inter.variable} bg-black-300 text-white min-h-full flex justify-center`}>
         <WidthProvider>{children}</WidthProvider>
+        <Toaster />
       </body>
     </html>
   )
