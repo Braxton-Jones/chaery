@@ -73,7 +73,7 @@ export default function Schedule({ name, schedule, last_updated, isUser, chaeryb
                   {schedule?.monday_start === 'Off' ? (
                     <p className="text-white-300">Off work today!</p>
                   ) : (
-                    <div className='flex gap-2'>
+                    <div className="flex gap-2">
                       <p className="text-white-300">{militaryToStandard(schedule?.monday_start)}</p>
                       <p className="text-white-300">-</p>
                       <p className="text-white-300">{militaryToStandard(schedule?.monday_end)}</p>
