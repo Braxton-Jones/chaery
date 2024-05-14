@@ -26,7 +26,7 @@ type ModalInfoProps = {
 }
 export default function ModalDrawer({ trigger, title, content }: ModalInfoProps) {
   return (
-    <section className="text-black">
+    <section className="text-black ">
       <Dialog>
         <DialogTrigger className="hidden sm:block">{trigger}</DialogTrigger>
         <DialogContent className="bg-white text-black-100">
@@ -37,7 +37,7 @@ export default function ModalDrawer({ trigger, title, content }: ModalInfoProps)
         </DialogContent>
       </Dialog>
       <Drawer>
-        <DrawerTrigger className="block sm:hidden">{trigger}</DrawerTrigger>
+        <DrawerTrigger className="block sm:hidden w-full">{trigger}</DrawerTrigger>
         <DrawerContent className="text-black-100">
           <DrawerHeader>
             <DrawerTitle>{title}</DrawerTitle>

@@ -1,14 +1,14 @@
 import { Budget } from '@/components/budget_components/Budget'
 import Schedule from '@/components/event_components/schedule'
 import UpcomingEvents from '@/components/event_components/upcoming-events'
-import GroceryList from '@/components/food_components/grocery-list'
-import MealVote from '@/components/food_components/meal-vote'
+import GroceryList from '@/components/board_components/grocery-list'
 import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Calendar from '@/components/event_components/Calendar'
+import CouplesBoard from '@/components/board_components/Board'
 
 type ScheduleProps = {
   monday_start: string | null
@@ -116,7 +116,7 @@ export default async function Dashboard(params: { params: { chaerybond: string }
         </TabsContent>
         <TabsContent value="board">
           <section className="w-full h-full space-y-5">
-            <GroceryList />
+            <CouplesBoard currentUser={CurrentUser} relationship={relationship} />
           </section>
         </TabsContent>
       </Tabs>

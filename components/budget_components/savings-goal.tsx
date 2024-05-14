@@ -51,20 +51,20 @@ export default function Goal({ title, goal, description, current, projected_date
     toast.success('Goal deleted')
   }
 
-const updateSavedAmount = async () => {
-  const { data, error } = await supabase
-    .from('Goals')
-    .update({ amount_saved: currentAmount })
-    .eq('chaery_goal_id', goalID);
-  if (error) {
-    console.error('Error updating goal:', error);
-    toast.error('Error updating goal');
-    return;
+  const updateSavedAmount = async () => {
+    const { data, error } = await supabase
+      .from('Goals')
+      .update({ amount_saved: currentAmount })
+      .eq('chaery_goal_id', goalID)
+    if (error) {
+      console.error('Error updating goal:', error)
+      toast.error('Error updating goal')
+      return
+    }
+    console.log('Goal updated:', data)
+    setProgress((currentAmount / goal) * 100)
+    toast.success('Goal updated')
   }
-  console.log('Goal updated:', data);
-  setProgress((currentAmount / goal) * 100);
-  toast.success('Goal updated');
-};
   return (
     <Card>
       <CardHeader>
@@ -147,10 +147,10 @@ const updateSavedAmount = async () => {
               <div></div>
             </div>
             <Button
-  className="w-full h-10 px-4 py-2 bg-cherry_light-700 hover:bg-cherry_light-800 rounded border text-white text-sm border-cherry_light-900 font-semibold"
-  disabled={currentAmount === current}
-  onClick={updateSavedAmount}
->
+              className="w-full h-10 px-4 py-2 bg-cherry_light-700 hover:bg-cherry_light-800 rounded border text-white text-sm border-cherry_light-900 font-semibold"
+              disabled={currentAmount === current}
+              onClick={updateSavedAmount}
+            >
               {' '}
               Save Changes
             </Button>

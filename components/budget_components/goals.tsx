@@ -34,14 +34,13 @@ export default async function FinancialGoals({ chaery_bond }: { chaery_bond: str
       },
     },
   )
-  const user = supabase.auth.getUser(); // Get the authenticated user first
+  const user = supabase.auth.getUser() // Get the authenticated user first
   if (!user) {
     // Handle the case where the user is not authenticated
-    console.error('User is not authenticated.');
-    return null;
+    console.error('User is not authenticated.')
+    return null
   }
 
- 
   const getGoals = async () => {
     const { data: goals, error } = await supabase.from('Goals').select('*').eq('chaery_link', chaery_bond)
     if (error) {
@@ -49,7 +48,7 @@ export default async function FinancialGoals({ chaery_bond }: { chaery_bond: str
     }
     return goals
   }
-   const goals = await getGoals()
+  const goals = await getGoals()
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -66,26 +65,27 @@ export default async function FinancialGoals({ chaery_bond }: { chaery_bond: str
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {goals && (goals.length > 0 || (
-  <div className="bg-cherry_light-800 p-2 rounded-md">
-    <h2 className="text-lg font-semibold text-center">No Goals Yet</h2>
-    <p className="text-sm">
-      Select &quot;Add Goal&quot; to get started. You can create a goal for anything you want to save up for,
-      like a vacation, a new car, or a new home.
-    </p>
-  </div>
-))}
+        {goals &&
+          (goals.length > 0 || (
+            <div className="bg-cherry_light-800 p-2 rounded-md">
+              <h2 className="text-lg font-semibold text-center">No Goals Yet</h2>
+              <p className="text-sm">
+                Select &quot;Add Goal&quot; to get started. You can create a goal for anything you want to save up for,
+                like a vacation, a new car, or a new home.
+              </p>
+            </div>
+          ))}
         {goals?.map((goal: GoalProps) => (
-              <Goal
-                key={goal.id}
-                title={goal.goal_name}
-                goal={parseInt(goal.goal_amount)}
-                current={parseInt(goal.amount_saved)}
-                projected_date={goal.goal_target}
-                description={goal.goal_description}
-                goalID={goal.chaery_goal_id}
-              />
-            ))}
+          <Goal
+            key={goal.id}
+            title={goal.goal_name}
+            goal={parseInt(goal.goal_amount)}
+            current={parseInt(goal.amount_saved)}
+            projected_date={goal.goal_target}
+            description={goal.goal_description}
+            goalID={goal.chaery_goal_id}
+          />
+        ))}
       </div>
     </div>
   )
