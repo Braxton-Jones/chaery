@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 export type Bill = {
-  category: 'Rent' | 'Utilities' | 'Food' | 'Entertainment' | 'Internet' | 'Phone' | 'Insurance' | 'Other'
+  category?: 'Rent' | 'Utilities' | 'Food' | 'Entertainment' | 'Internet' | 'Phone' | 'Insurance' | 'Other' | null
   dueDate: string
   amount: number
   company: string | null
