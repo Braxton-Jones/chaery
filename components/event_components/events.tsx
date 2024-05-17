@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth } from 'date-fns'
+import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, addDays } from 'date-fns'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '../ui/button'
 import Calendar from './event-calendar'
@@ -8,8 +8,10 @@ import ModalDrawer from '../modalDrawer'
 import { Formik, Form, useField, ErrorMessage, Field } from 'formik'
 import * as Yup from 'yup'
 import { toast } from 'sonner'
-import { DrawerClose } from '../ui/drawer'
 import { nanoid } from 'nanoid'
+import { createBrowserClient } from '@supabase/ssr'
+
+
 
 export type Event = {
   event_id: string
@@ -18,10 +20,28 @@ export type Event = {
   start_time: string
   end_time?: string
 }
+const supabase = createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
-const dummyData: Event[] = []
-export default function RelationshipCalendar() {
-  const [events, setEvents] = useState<Event[]>(dummyData)
+
+const dummyData: Event[] = [
+  // {
+  //   event_id: 'event-1',
+  //   date: '2024-05-16',
+  //   title: 'Event 1',
+  //   start_time: '10:00 AM',
+  //   end_time: '12:00 PM',
+  // },
+ 
+]
+export default function RelationshipCalendar({ chaerybond, events }: { chaerybond: string, events: Event[]}) {
+  if(events === undefined|| events === null) {
+    events = []
+  }
+  
+  const [currentevents, setEvents] = useState<Event[]>(dummyData)
   const EventSchema = Yup.object().shape({
     event_name: Yup.string()
       .required('Please enter an event name')
@@ -31,7 +51,7 @@ export default function RelationshipCalendar() {
     event_start_time: Yup.string().required('Please enter a start time'),
     event_end_time: Yup.string()
       .required('Please enter an end time')
-      .when('event_start_time', (event_start_time: string, schema: any) => {
+      .when('event_start_time', (event_start_time: any, schema: any) => {
         return schema.test({
           test: (event_end_time: string) => event_end_time > event_start_time,
           message: 'End time must be after start time',
@@ -47,6 +67,7 @@ export default function RelationshipCalendar() {
     const hour12 = hour % 12 || 12
     return `${hour12}:${min < 10 ? '0' : ''}${min} ${ampm}`
   }
+
   const handleSubmit = async (values: {
     event_name: string
     event_date: string
@@ -54,19 +75,42 @@ export default function RelationshipCalendar() {
     event_end_time: string
   }) => {
     const { event_name, event_date, event_start_time, event_end_time } = values
+    const formatted_event_date = addDays(new Date(event_date), 1)
 
-    setEvents((prevEvents) => [
-      ...prevEvents,
-      {
+   
+    // const { data, error } = await supabase.from('Relationships').upsert([
+      
+    // ])
+
+    // Make event data into JSON
+    const eventData = {
+  
         event_id: `event-${nanoid(10)}`,
-        date: event_date,
+        date: formatted_event_date.toISOString(),
         title: event_name,
         start_time: timeFormat(event_start_time),
         end_time: timeFormat(event_end_time),
-      },
-    ])
-    toast.success('Event added successfully')
+      
   }
+
+   events.push(eventData)
+
+    
+    const { data, error } = await supabase.from('Relationships').update({
+      couples_events: events
+    }).eq('chaery_link_id', chaerybond)
+
+    if(error) {
+      console.log(error)
+      toast.error(`Error adding event to database: ${error.message}`)
+    }else{
+      
+      setEvents(events)
+      toast.success('Event added successfully')
+    }
+  }
+
+
 
   return (
     <Card>
@@ -145,7 +189,11 @@ export default function RelationshipCalendar() {
         </div>
       </CardHeader>
       <CardContent>
-        <Calendar events={events} />
+        <Calendar 
+        events={events}
+        chaerylink={chaerybond}
+
+         />
       </CardContent>
     </Card>
   )

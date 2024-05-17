@@ -8,9 +8,40 @@ import FinancialResponsibilities from './bills'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { User, Relationship } from '@/app/home/dashboard/[chaerybond]/page'
+import { redirect } from 'next/navigation'
+
 
 export async function Budget({ currentUser, relationship }: { currentUser: User; relationship: Relationship }) {
   const chaery_bond = currentUser.bondID
+  const chaery_link = relationship.chaery_link_id
+  const cookieStore = cookies()
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value
+        },
+      },
+    }
+  )
+
+  const { data, error } = await supabase.auth.getUser()
+  if (error || !data?.user) {
+    redirect('/login')
+  }
+
+  const getBills = async () => {
+    const { data, error } = await supabase.from('Relationships').select('couples_bills').eq('chaery_link_id', chaery_link)
+    if (error) {
+      console.error(error)
+      return
+    }
+    return data
+  }
+  const bills = await getBills()
+  console.log(bills[0].couples_bills, 'bills')
 
   return (
     <div className="flex flex-col h-full w-full  mx-auto p-6 md:p-10 bg-white dark:bg-gray-950 rounded-lg shadow-lg text-black-100">
@@ -27,11 +58,9 @@ export async function Budget({ currentUser, relationship }: { currentUser: User;
           </Button>
         </div>
       </header>
-      <Tabs className="" defaultValue="overview">
+      <Tabs className="" defaultValue="bills">
         <TabsList className="w-full bg-black-900">
-          <TabsTrigger value="overview" className="w-full">
-            Overview
-          </TabsTrigger>
+          
           <TabsTrigger value="bills" className="w-full">
             Bills
           </TabsTrigger>
@@ -39,14 +68,14 @@ export async function Budget({ currentUser, relationship }: { currentUser: User;
             Goals
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="overview">
-          <FinancialOverview chaery_bond={chaery_bond} />
-        </TabsContent>
         <TabsContent value="goals">
           <FinancialGoals chaery_bond={chaery_bond} />
         </TabsContent>
         <TabsContent value="bills">
-          <FinancialResponsibilities />
+          <FinancialResponsibilities
+            bills={bills[0].couples_bills ?? []}
+            chaery_link={chaery_link}
+           />
         </TabsContent>
       </Tabs>
     </div>

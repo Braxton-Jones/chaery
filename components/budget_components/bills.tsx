@@ -11,30 +11,14 @@ import Image from 'next/image'
 import ModalDrawer from '@/components/modalDrawer'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { set } from 'date-fns'
-export default function FinancialResponsibilities() {
-  const bills: Bill[] = [
-    // {
-    //   category: 'Rent',
-    //   dueDate: '2022-01-01',
-    //   amount: 750,
-    //   company: 'Landlord',
-    // },
-    // {
-    //   category: 'Utilities',
-    //   dueDate: '2022-01-15',
-    //   amount: 150,
-    //   company: 'Electric Company',
-    // },
-    // {
-    //   category: 'Food',
-    //   dueDate: '2022-01-20',
-    //   amount: 300,
-    //   company: 'Grocery Store',
-    // },
-  ]
-
-  const [billData, setBillData] = useState(bills)
+import { createBrowserClient } from '@supabase/ssr'
+export default function FinancialResponsibilities({ chaery_link, bills }: { chaery_link: string; bills: Bill[] }) {
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+  const [billData, setBillData] = useState(bills);
+  console.log(billData, 'billData')
   const BillSchema = Yup.object().shape({
     category: Yup.string().required('Please select a category'),
     dueDate: Yup.date().required('Please select a due date'),
@@ -45,7 +29,16 @@ export default function FinancialResponsibilities() {
       .min(1, 'Please enter a number greater than 0'),
     company: Yup.string().required('Please enter a company name').min(2, 'Please enter a company name'),
   })
-  const handleSubmit = (values: Bill) => {
+
+  const handleSubmit = async (values: Bill) => {
+    const {data, error} = await supabase.from('Relationships').update({
+      couples_bills: [...billData, values]
+    }).eq('chaery_link_id', chaery_link)
+    if (error) {
+      console.error(error)
+      toast.error('An error occurred while adding bill')
+      return
+    }
     setBillData([...billData, values])
     toast.success('Bill added successfully')
   }

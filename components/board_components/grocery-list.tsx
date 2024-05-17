@@ -9,6 +9,8 @@ import { nanoid } from 'nanoid'
 import ModalDrawer from '../modalDrawer'
 import { Formik, Form, useField, ErrorMessage, Field } from 'formik'
 import * as Yup from 'yup'
+import { createBrowserClient } from '@supabase/ssr'
+import { toast } from 'sonner'
 
 export type GroceryItem = {
   id: string
@@ -19,26 +21,41 @@ export type GroceryItem = {
   checked: boolean
 }
 
-const dummyData: GroceryItem[] = []
 
-export default function GroceryList() {
-  const [groceryItems, setGroceryItems] = useState<GroceryItem[]>(dummyData)
+export default function GroceryList({ chaery_link, groceries, currentUser }: { chaery_link: string; groceries: any; currentUser: any }) {
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+  const [groceryItems, setGroceryItems] = useState<GroceryItem[]>(groceries)
 
-  const handleSubmit = (values: any, { resetForm }: any) => {
+  const handleSubmit = async (values: any, { resetForm }: any) => {
+    const newItem = {
+      id: `item-${nanoid(10)}`,
+      name: values.name,
+      category: values.category as 'produce' | 'meat' | 'dairy' | 'pantry' | 'frozen' | 'other',
+      quantity: values.quantity,
+      quantityType: values.quantityType as 'lbs' | 'oz' | 'g' | 'each' | 'dozen' | 'lb',
+      checked: false,
+    }
+  
+    const {data, error} = await supabase.from('Relationships').update({
+      couples_groceries: [...groceryItems, newItem]
+    }).eq('chaery_link_id', chaery_link)
+    if (error) {
+      console.error(error)
+      toast.error('An error occurred while adding item')
+      return
+    }
     if (['produce', 'meat', 'dairy', 'pantry', 'frozen', 'other'].includes(values.category)) {
       setGroceryItems([
         ...groceryItems,
-        {
-          id: `item-${nanoid(10)}`,
-          name: values.name,
-          category: values.category as 'produce' | 'meat' | 'dairy' | 'pantry' | 'frozen' | 'other',
-          quantity: values.quantity,
-          quantityType: values.quantityType as 'lbs' | 'oz' | 'g' | 'each' | 'dozen' | 'lb',
-          checked: false,
-        },
+        newItem
       ])
+      toast.success(`${values.name} added to grocery list`)
       resetForm()
     }
+    
   }
 
   return (

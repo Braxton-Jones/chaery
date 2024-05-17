@@ -47,6 +47,10 @@ export type Relationship = {
   anniversary: null | string // Null or string type for anniversary
   spotify_playlist_id: null | string // Null or string type for Spotify playlist ID
   chaery_link_id: string
+  couples_groceries: any
+  couples_bills: any
+  couples_events: any
+  couples_reminders: any
 }
 
 export default async function Dashboard(params: { params: { chaerybond: string } }) {
