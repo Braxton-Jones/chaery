@@ -26,22 +26,22 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from '@/components/ui/alert-dialog'
 import trash from '@/public/trash.svg'
 import { createBrowserClient } from '@supabase/ssr'
 import { toast } from 'sonner'
 
-function Calendar({ events, chaerylink }: { events: Event[], chaerylink: string}) {
+function Calendar({ events, chaerylink }: { events: Event[]; chaerylink: string }) {
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   )
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [eventData, setEventData] = useState<Event[]>(events)
   const debugFunction = () => {
-  console.log(events, 'events')
-  console.log(selectedDate, 'selectedDate')
+    console.log(events, 'events')
+    console.log(selectedDate, 'selectedDate')
   }
 
   const renderHeader = () => {
@@ -93,8 +93,6 @@ function Calendar({ events, chaerylink }: { events: Event[], chaerylink: string}
       days = days.slice(7)
     }
 
-
-
     return <div>{rows}</div>
   }
 
@@ -135,14 +133,17 @@ function Calendar({ events, chaerylink }: { events: Event[], chaerylink: string}
     const filteredEvents = eventData?.filter((event) => !isSameDay(new Date(event.date), selectedDate))
     console.log(filteredEvents, 'filteredEvents')
 
-    const { data, error } = await supabase.from('Relationships').update({
-      couples_events: filteredEvents,
-    }).eq('chaery_link_id', chaerylink)
+    const { data, error } = await supabase
+      .from('Relationships')
+      .update({
+        couples_events: filteredEvents,
+      })
+      .eq('chaery_link_id', chaerylink)
     setEventData(filteredEvents)
 
     if (error) {
       console.error(error)
-    }else{
+    } else {
       toast.success('Event deleted successfully')
     }
   }
@@ -159,22 +160,23 @@ function Calendar({ events, chaerylink }: { events: Event[], chaerylink: string}
             <CardTitle className="text-md">Events for {format(selectedDate, 'MMMM d, yyyy')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='flex items-center gap-4'>
-            {filteredEvents?.length === 0 && <p>No events for this date</p>}
-            <ul className="list-disc ml-6">
-              {filteredEvents.map((event, index) => (
-                <li key={index} className="text-sm hover:text-cher">
-                  {event.title} @ {event.start_time} - {event.end_time}
-                </li>
-
-              ))}
-            </ul>
-            {filteredEvents?.length !== 0 && 
-            <Image src={trash} alt="delete" 
-            className="h-4 w-4 cursor-pointer hover:bg-cherry_light-300 rounded-md" 
-            onClick={deleteEvent}
-             />}
-            
+            <div className="flex items-center gap-4">
+              {filteredEvents?.length === 0 && <p>No events for this date</p>}
+              <ul className="list-disc ml-6">
+                {filteredEvents.map((event, index) => (
+                  <li key={index} className="text-sm hover:text-cher">
+                    {event.title} @ {event.start_time} - {event.end_time}
+                  </li>
+                ))}
+              </ul>
+              {filteredEvents?.length !== 0 && (
+                <Image
+                  src={trash}
+                  alt="delete"
+                  className="h-4 w-4 cursor-pointer hover:bg-cherry_light-300 rounded-md"
+                  onClick={deleteEvent}
+                />
+              )}
             </div>
           </CardContent>
         </Card>
@@ -193,7 +195,7 @@ function Calendar({ events, chaerylink }: { events: Event[], chaerylink: string}
       {/* 
     show events for selected date
     */}
-    {events ? renderEventsForSelectedDate() : null}
+      {events ? renderEventsForSelectedDate() : null}
       {/* <Button onClick={debugFunction}>Debug</Button> */}
     </section>
   )

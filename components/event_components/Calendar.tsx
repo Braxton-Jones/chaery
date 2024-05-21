@@ -29,7 +29,7 @@ export default async function Calendar({
           return cookieStore.get(name)?.value
         },
       },
-    }
+    },
   )
   const { data, error } = await supabase.auth.getUser()
   if (error) {
@@ -46,14 +46,11 @@ export default async function Calendar({
     }
     return events
   }
-  const events = await getEvents();
+  const events = await getEvents()
 
   return (
     <section className="w-full h-full space-y-5">
-      <RelationshipCalendar
-        chaerybond={chaery_link}
-        events={events && events[0]?.couples_events}
-      />
+      <RelationshipCalendar chaerybond={chaery_link} events={events && events[0]?.couples_events} />
       <Schedule
         name={CurrentUser.first_name}
         schedule={yourSchedule}
@@ -69,5 +66,5 @@ export default async function Calendar({
         last_updated={Partner?.last_schedule_update}
       />
     </section>
-  );
+  )
 }

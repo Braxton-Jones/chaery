@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import { createBrowserClient } from '@supabase/ssr'
 import React from 'react'
@@ -9,7 +9,7 @@ import ModalDrawer from '@/components/modalDrawer'
 import { nanoid } from 'nanoid'
 import { Formik, Form, useField, ErrorMessage, Field } from 'formik'
 import * as Yup from 'yup'
-import { toast } from 'sonner';
+import { toast } from 'sonner'
 
 export type Reminder = {
   reminderId: string
@@ -20,15 +20,22 @@ export type Reminder = {
   read: boolean
 }
 
-
-
-export default function Reminders({ chaery_link, reminders, currentUser }: { chaery_link: string; reminders: Reminder[]; currentUser: any}) {
+export default function Reminders({
+  chaery_link,
+  reminders,
+  currentUser,
+}: {
+  chaery_link: string
+  reminders: Reminder[]
+  currentUser: any
+}) {
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   )
   const [reminderData, setReminders] = useState(reminders)
-  const toggleRead = (reminderId: string) => {
+
+  const toggleRead = async (reminderId: string) => {
     const updatedReminders = reminderData.map((reminder) => {
       if (reminder.reminderId === reminderId) {
         return { ...reminder, read: !reminder.read }
@@ -36,12 +43,52 @@ export default function Reminders({ chaery_link, reminders, currentUser }: { cha
       return reminder
     })
     setReminders(updatedReminders)
+
+    const { data, error } = await supabase
+      .from('Relationships')
+      .update({
+        couples_reminders: updatedReminders,
+      })
+      .eq('chaery_link_id', chaery_link)
+    if (error) {
+      console.error(error)
+      toast.error('An error occurred while updating reminder')
+      return
+    }
   }
-  const markAllAsRead = () => {
+
+  const markAllAsRead = async () => {
     const updatedReminders = reminders.map((reminder) => {
       return { ...reminder, read: true }
     })
     setReminders(updatedReminders)
+    const { data, error } = await supabase
+      .from('Relationships')
+      .update({
+        couples_reminders: updatedReminders,
+      })
+      .eq('chaery_link_id', chaery_link)
+    if (error) {
+      console.error(error)
+      toast.error('An error occurred while updating reminder')
+      return
+    }
+  }
+
+  const deleteAllRead = async () => {
+    const updatedReminders = reminders.filter((reminder) => reminder.read === false)
+    setReminders(updatedReminders)
+    const { data, error } = await supabase
+      .from('Relationships')
+      .update({
+        couples_reminders: updatedReminders,
+      })
+      .eq('chaery_link_id', chaery_link)
+    if (error) {
+      console.error(error)
+      toast.error('An error occurred while updating reminder')
+      return
+    }
   }
 
   const ReminderSchema = Yup.object().shape({
@@ -50,7 +97,7 @@ export default function Reminders({ chaery_link, reminders, currentUser }: { cha
     date: Yup.string().required('Date is required'),
   })
   return (
-    <Card>
+    <Card className="h-fit">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Reminders</CardTitle>
@@ -72,16 +119,22 @@ export default function Reminders({ chaery_link, reminders, currentUser }: { cha
                   }}
                   validationSchema={ReminderSchema}
                   onSubmit={async (values, { resetForm }) => {
-                    const { data, error } = await supabase.from('Relationships').update({
-                      couples_reminders: [...reminders, {
-                        reminderId: `reminder-${nanoid(10)}`,
-                        title: values.title,
-                        description: values.description,
-                        sender: 'You',
-                        date: values.date,
-                        read: false,
-                      }]
-                    }).eq('chaery_link_id', chaery_link)
+                    const { data, error } = await supabase
+                      .from('Relationships')
+                      .update({
+                        couples_reminders: [
+                          ...reminders,
+                          {
+                            reminderId: `reminder-${nanoid(10)}`,
+                            title: values.title,
+                            description: values.description,
+                            sender: currentUser.first_name,
+                            date: values.date,
+                            read: false,
+                          },
+                        ],
+                      })
+                      .eq('chaery_link_id', chaery_link)
 
                     if (error) {
                       console.error(error)
@@ -94,7 +147,7 @@ export default function Reminders({ chaery_link, reminders, currentUser }: { cha
                         reminderId: `reminder-${nanoid(10)}`,
                         title: values.title,
                         description: values.description,
-                        sender: 'You',
+                        sender: currentUser.first_name,
                         date: values.date,
                         read: false,
                       },
@@ -167,9 +220,12 @@ export default function Reminders({ chaery_link, reminders, currentUser }: { cha
             <Card key={index} className="py-2 border-b border-gray-200">
               <CardHeader>
                 <div className="flex justify-between">
-                  <CardTitle className="text-sm">
-                    {reminder.title} - <span className="text-xs text-white-300">{reminder.date}</span>
-                  </CardTitle>
+                  <div>
+                    <CardTitle className="text-sm">
+                      {reminder.title} - <span className="text-xs text-white-300">{reminder.date}</span>
+                    </CardTitle>
+                    <CardDescription className="text-xs text-white-300">Sent by {reminder.sender}</CardDescription>
+                  </div>
                   <Button
                     className="bg-cherry_light-700 hover:bg-cherry_light-800 w-fit p-1.5 h-6 text-xs"
                     onClick={() => toggleRead(reminder.reminderId)}
@@ -202,10 +258,17 @@ export default function Reminders({ chaery_link, reminders, currentUser }: { cha
             </Card>
           ))}
       </CardContent>
-      {reminders.length > 0 && (
+      {reminders.length > 0 && reminderData.some((reminder) => reminder.read === false) && (
         <CardFooter>
           <Button className="w-full bg-cherry_light-700 hover:bg-cherry_light-800" onClick={markAllAsRead}>
             Mark All As Read
+          </Button>
+        </CardFooter>
+      )}
+      {reminders.length > 0 && reminderData.some((reminder) => reminder.read === true) && (
+        <CardFooter>
+          <Button className="w-full bg-cherry_light-600 hover:bg-cherry_light-800" onClick={deleteAllRead}>
+            Clear All Read
           </Button>
         </CardFooter>
       )}
@@ -229,6 +292,27 @@ function PlusIcon(props: any) {
     >
       <path d="M5 12h14" />
       <path d="M12 5v14" />
+    </svg>
+  )
+}
+
+function TrashIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 6h18" />
+      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
     </svg>
   )
 }

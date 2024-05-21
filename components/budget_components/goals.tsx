@@ -64,12 +64,12 @@ export default async function FinancialGoals({ chaery_bond }: { chaery_bond: str
           content={<SavingsGoal chaery_bond={chaery_bond} />}
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="w-full">
         {goals &&
           (goals.length > 0 || (
-            <div className="bg-cherry_light-800 p-2 rounded-md">
+            <div className="bg-cherry_light-800 px-8 py-4 rounded-md ">
               <h2 className="text-lg font-semibold text-center">No Goals Yet</h2>
-              <p className="text-sm">
+              <p className="text-sm text-center">
                 Select &quot;Add Goal&quot; to get started. You can create a goal for anything you want to save up for,
                 like a vacation, a new car, or a new home.
               </p>

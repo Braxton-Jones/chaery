@@ -1,6 +1,15 @@
 'use client'
 import React, { useState } from 'react'
-import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, isSameMonth, addDays } from 'date-fns'
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
+  eachDayOfInterval,
+  isSameMonth,
+  addDays,
+} from 'date-fns'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '../ui/button'
 import Calendar from './event-calendar'
@@ -11,8 +20,6 @@ import { toast } from 'sonner'
 import { nanoid } from 'nanoid'
 import { createBrowserClient } from '@supabase/ssr'
 
-
-
 export type Event = {
   event_id: string
   date: string
@@ -20,11 +27,7 @@ export type Event = {
   start_time: string
   end_time?: string
 }
-const supabase = createBrowserClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
-
+const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
 
 const dummyData: Event[] = [
   // {
@@ -34,13 +37,12 @@ const dummyData: Event[] = [
   //   start_time: '10:00 AM',
   //   end_time: '12:00 PM',
   // },
- 
 ]
-export default function RelationshipCalendar({ chaerybond, events }: { chaerybond: string, events: Event[]}) {
-  if(events === undefined|| events === null) {
+export default function RelationshipCalendar({ chaerybond, events }: { chaerybond: string; events: Event[] }) {
+  if (events === undefined || events === null) {
     events = []
   }
-  
+
   const [currentevents, setEvents] = useState<Event[]>(dummyData)
   const EventSchema = Yup.object().shape({
     event_name: Yup.string()
@@ -77,40 +79,36 @@ export default function RelationshipCalendar({ chaerybond, events }: { chaerybon
     const { event_name, event_date, event_start_time, event_end_time } = values
     const formatted_event_date = addDays(new Date(event_date), 1)
 
-   
     // const { data, error } = await supabase.from('Relationships').upsert([
-      
+
     // ])
 
     // Make event data into JSON
     const eventData = {
-  
-        event_id: `event-${nanoid(10)}`,
-        date: formatted_event_date.toISOString(),
-        title: event_name,
-        start_time: timeFormat(event_start_time),
-        end_time: timeFormat(event_end_time),
-      
-  }
+      event_id: `event-${nanoid(10)}`,
+      date: formatted_event_date.toISOString(),
+      title: event_name,
+      start_time: timeFormat(event_start_time),
+      end_time: timeFormat(event_end_time),
+    }
 
-   events.push(eventData)
+    events.push(eventData)
 
-    
-    const { data, error } = await supabase.from('Relationships').update({
-      couples_events: events
-    }).eq('chaery_link_id', chaerybond)
+    const { data, error } = await supabase
+      .from('Relationships')
+      .update({
+        couples_events: events,
+      })
+      .eq('chaery_link_id', chaerybond)
 
-    if(error) {
+    if (error) {
       console.log(error)
       toast.error(`Error adding event to database: ${error.message}`)
-    }else{
-      
+    } else {
       setEvents(events)
       toast.success('Event added successfully')
     }
   }
-
-
 
   return (
     <Card>
@@ -189,11 +187,7 @@ export default function RelationshipCalendar({ chaerybond, events }: { chaerybon
         </div>
       </CardHeader>
       <CardContent>
-        <Calendar 
-        events={events}
-        chaerylink={chaerybond}
-
-         />
+        <Calendar events={events} chaerylink={chaerybond} />
       </CardContent>
     </Card>
   )

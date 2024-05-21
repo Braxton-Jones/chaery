@@ -1,34 +1,31 @@
 'use client'
 import { GroceryItem } from './grocery-list'
-
+import { createBrowserClient } from '@supabase/ssr'
 import { Checkbox } from '../ui/checkbox'
 import { Button } from '../ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { useState } from 'react'
 
-// id: string;
-//     name: string;
-//     category: "produce" | "meat" | "dairy" | "pantry" | "frozen" | "other";
-//     quantity: string;
-//     quantityType: "lbs" | "oz" | "g" | "each" | "dozen" | "lb";
-//     checked: boolean;
 export default function GroceryListItem({ id, name, category, quantity, checked }: GroceryItem) {
   const [checkedState, setChecked] = useState(checked)
 
   const toggleChecked = () => {
     console.log(checkedState)
     setChecked(!checkedState)
-    // debounce & timeout
   }
 
   return (
     <Card className={`flex flex-row justify-between items-center ${checkedState ? 'bg-white-600' : ''}`}>
-      <CardHeader>
-        <CardTitle className="text-sm">
-          {name} / <span className="text-white-300 text-xs">{category}</span>
-        </CardTitle>
-        <CardDescription className="text-xs">{quantity}</CardDescription>
-      </CardHeader>
+      <div className="flex items-center">
+        <TrashIcon className="h-5 w-6 text-gray-500 cursor-pointer" />
+        <CardHeader>
+          <CardTitle className="text-sm">
+            {name} / <span className="text-white-300 text-xs">{category}</span>
+          </CardTitle>
+          <CardDescription className="text-xs">{quantity}</CardDescription>
+        </CardHeader>
+      </div>
+
       <div className="mr-5 flex items-center justify-center">
         <Checkbox
           checked={checkedState}

@@ -10,7 +10,6 @@ import { cookies } from 'next/headers'
 import { User, Relationship } from '@/app/home/dashboard/[chaerybond]/page'
 import { redirect } from 'next/navigation'
 
-
 export async function Budget({ currentUser, relationship }: { currentUser: User; relationship: Relationship }) {
   const chaery_bond = currentUser.bondID
   const chaery_link = relationship.chaery_link_id
@@ -24,7 +23,7 @@ export async function Budget({ currentUser, relationship }: { currentUser: User;
           return cookieStore.get(name)?.value
         },
       },
-    }
+    },
   )
 
   const { data, error } = await supabase.auth.getUser()
@@ -33,7 +32,10 @@ export async function Budget({ currentUser, relationship }: { currentUser: User;
   }
 
   const getBills = async () => {
-    const { data, error } = await supabase.from('Relationships').select('couples_bills').eq('chaery_link_id', chaery_link)
+    const { data, error } = await supabase
+      .from('Relationships')
+      .select('couples_bills')
+      .eq('chaery_link_id', chaery_link)
     if (error) {
       console.error(error)
       return
@@ -47,20 +49,9 @@ export async function Budget({ currentUser, relationship }: { currentUser: User;
     <div className="flex flex-col h-full w-full  mx-auto p-6 md:p-10 bg-white dark:bg-gray-950 rounded-lg shadow-lg text-black-100">
       <header className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Budget</h1>
-        <div className="flex items-center space-x-4">
-          <Button size="icon" variant="ghost">
-            <SettingsIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-            <span className="sr-only">Settings</span>
-          </Button>
-          <Button size="icon" variant="ghost">
-            <HelpCircleIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-            <span className="sr-only">Help</span>
-          </Button>
-        </div>
       </header>
       <Tabs className="" defaultValue="bills">
         <TabsList className="w-full bg-black-900">
-          
           <TabsTrigger value="bills" className="w-full">
             Bills
           </TabsTrigger>
@@ -68,14 +59,12 @@ export async function Budget({ currentUser, relationship }: { currentUser: User;
             Goals
           </TabsTrigger>
         </TabsList>
+
         <TabsContent value="goals">
           <FinancialGoals chaery_bond={chaery_bond} />
         </TabsContent>
         <TabsContent value="bills">
-          <FinancialResponsibilities
-            bills={bills[0].couples_bills ?? []}
-            chaery_link={chaery_link}
-           />
+          <FinancialResponsibilities bills={bills[0].couples_bills ?? []} chaery_link={chaery_link} />
         </TabsContent>
       </Tabs>
     </div>
