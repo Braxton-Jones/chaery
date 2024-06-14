@@ -1,7 +1,4 @@
 import { Budget } from '@/components/budget_components/Budget'
-import Schedule from '@/components/event_components/schedule'
-import UpcomingEvents from '@/components/event_components/upcoming-events'
-import GroceryList from '@/components/board_components/grocery-list'
 import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
