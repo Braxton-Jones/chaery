@@ -87,7 +87,7 @@ function Calendar({ events, chaerylink }: { events: Event[]; chaerylink: string 
     while (days.length > 0) {
       rows.push(
         <div className="grid grid-cols-7" key={days[0].toString()}>
-          {days.slice(0, 7).map((day, index) => renderCell(day, index))}
+          {days.slice(0, 7).map((day, index) => renderCell(day as unknown as string, index.toLocaleString()))}
         </div>,
       )
       days = days.slice(7)
@@ -125,7 +125,7 @@ function Calendar({ events, chaerylink }: { events: Event[]; chaerylink: string 
     setCurrentDate((prevDate) => new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1))
   }
 
-  const handleDayClick = (day) => {
+  const handleDayClick = (day: any) => {
     setSelectedDate(day)
   }
 

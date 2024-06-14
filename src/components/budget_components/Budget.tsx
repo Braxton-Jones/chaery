@@ -42,8 +42,8 @@ export async function Budget({ currentUser, relationship }: { currentUser: User;
     }
     return data
   }
-  const bills = await getBills()
-  console.log(bills[0].couples_bills, 'bills')
+  const bills = await getBills() ?? []
+  console.log(bills[0]?.couples_bills, 'bills')
 
   return (
     <div className="flex flex-col h-full w-full  mx-auto p-6 md:p-10 bg-white dark:bg-gray-950 rounded-lg shadow-lg text-black-100">

@@ -89,7 +89,7 @@ export default function FinancialResponsibilities({ chaery_link, bills }: { chae
                 <Formik
                   initialValues={{
                     id: '',
-                    category: null,
+                    category: '',
                     dueDate: '',
                     amount: 0,
                     company: '',

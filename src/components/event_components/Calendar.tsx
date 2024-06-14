@@ -15,8 +15,8 @@ export default async function Calendar({
   partner: Partner,
   relationship: Relationship,
 }: CalendarProps) {
-  const yourSchedule = JSON.parse(CurrentUser.schedule)
-  const partnerSchedule = JSON.parse(Partner?.schedule)
+  const yourSchedule = JSON.parse(JSON.stringify(CurrentUser.schedule || 'null'))
+  const partnerSchedule = JSON.parse(JSON.stringify(Partner?.schedule || 'null'))
   const chaery_link = Relationship?.chaery_link_id
   const cookieStore = cookies()
 
