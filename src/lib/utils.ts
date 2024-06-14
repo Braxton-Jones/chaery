@@ -17,7 +17,7 @@ export const dateFormat = (date: string) => {
 export function debounce<T extends (...args: any[]) => void>(func: T, wait: number): (...args: Parameters<T>) => void {
   let timeout: ReturnType<typeof setTimeout>
 
-  return function (...args: Parameters<T>) {
+  return function (this: any, ...args: Parameters<T>) {
     const context = this
 
     clearTimeout(timeout)
