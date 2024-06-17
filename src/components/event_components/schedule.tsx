@@ -31,16 +31,18 @@ type ScheduleProps = {
 
 export default function Schedule({ name, schedule, last_updated, isUser, chaerybond }: ScheduleProps) {
   const militaryToStandard = (time: string | null) => {
-    if (time === 'Off') return 'Off'
-    if (time === null) return ''
-    if (time === '') return ''
-    const [hours, minutes] = time.split(':')
-    const hour = parseInt(hours)
-    const standardHour = hour > 12 ? hour - 12 : hour
-    const standardMinutes = minutes
-    const amPm = hour >= 12 ? 'PM' : 'AM'
-    return `${standardHour}:${standardMinutes} ${amPm}`
-  }
+    if (time === 'Off') return 'Off';
+    if (time === null || typeof time === 'undefined' || time === '') return '';
+    
+    const [hours, minutes] = time.split(':');
+    const hour = parseInt(hours);
+    const standardHour = hour > 12 ? hour - 12 : hour;
+    const standardMinutes = minutes;
+    const amPm = hour >= 12 ? 'PM' : 'AM';
+    
+    return `${standardHour}:${standardMinutes} ${amPm}`;
+};
+
   return (
     <Card>
       <CardHeader>
