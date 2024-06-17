@@ -33,10 +33,7 @@ export default function Schedule({ name, schedule, last_updated, isUser, chaeryb
   const militaryToStandard = (time: string | null) => {
     if (time === 'Off') return 'Off'
     if (time === null) return ''
-    if (typeof time !== 'string' || !time.includes(':')) {
-      console.error('Invalid time format:', time);
-      return 'Invalid time';
-    }
+    if (time === '') return ''
     const [hours, minutes] = time.split(':')
     const hour = parseInt(hours)
     const standardHour = hour > 12 ? hour - 12 : hour
