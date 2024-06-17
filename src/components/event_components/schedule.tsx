@@ -30,6 +30,7 @@ type ScheduleProps = {
 }
 
 export default function Schedule({ name, schedule, last_updated, isUser, chaerybond }: ScheduleProps) {
+  console.log(schedule, 'in the schedule component')
   const militaryToStandard = (time: string | null) => {
     if (time === 'Off') return 'Off';
     if (time === null || typeof time === 'undefined' || time === '') return '';
@@ -42,7 +43,7 @@ export default function Schedule({ name, schedule, last_updated, isUser, chaeryb
     
     return `${standardHour}:${standardMinutes} ${amPm}`;
 };
-
+  
   return (
     <Card>
       <CardHeader>
