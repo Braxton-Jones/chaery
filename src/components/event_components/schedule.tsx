@@ -32,6 +32,7 @@ type ScheduleProps = {
 export default function Schedule({ name, schedule, last_updated, isUser, chaerybond }: ScheduleProps) {
   // Sample schedule object:
   // {"monday_start":"00:00","monday_end":"04:30","tuesday_start":"00:00","tuesday_end":"06:30","wednesday_start":"00:00","wednesday_end":"11:00","thursday_start":"00:00","thursday_end":"13:00","friday_start":"00:00","friday_end":"21:00","saturday_start":"01:30","saturday_end":"07:30","sunday_start":"Off","sunday_end":"Off"}
+  console.log(schedule, 'schedule')
   const militaryToStandard = (time: string | null) => {
     // sample time: "00:00"
     console.log(time, 'time', typeof time)
@@ -77,13 +78,13 @@ export default function Schedule({ name, schedule, last_updated, isUser, chaeryb
                 <Separator className="mb-3" />
                 <div className="flex flex-row items-center justify-between mb-4">
                   <p className="font-medium text-sm">Monday:</p>
-                  {schedule?.monday_start === 'Off' ? (
+                  {schedule.monday_start === 'Off' ? (
                     <p className="text-white-300">Off work today!</p>
                   ) : (
                     <div className="flex gap-2">
-                      <p className="text-white-300">{militaryToStandard(schedule?.monday_start)}</p>
+                      <p className="text-white-300">{militaryToStandard(schedule.monday_start)}</p>
                       <p className="text-white-300">-</p>
-                      <p className="text-white-300">{militaryToStandard(schedule?.monday_end)}</p>
+                      <p className="text-white-300">{militaryToStandard(schedule.monday_end)}</p>
                     </div>
                   )}
                 </div>
