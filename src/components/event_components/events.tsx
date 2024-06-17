@@ -61,7 +61,10 @@ export default function RelationshipCalendar({ chaerybond, events }: { chaerybon
       }),
   })
   const timeFormat = (time: string) => {
-    // turn 24hr time to 12hr time and add AM/PM
+    if (typeof time !== 'string' || !time.includes(':')) {
+      console.error('Invalid time format:', time);
+      return 'Invalid time';
+    }
     const [hours, minutes] = time.split(':')
     const hour = parseInt(hours)
     const min = parseInt(minutes)
