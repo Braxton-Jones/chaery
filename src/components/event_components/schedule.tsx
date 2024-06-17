@@ -33,11 +33,11 @@ export default function Schedule({ name, schedule, last_updated, isUser, chaeryb
   // Sample schedule object:
   // {"monday_start":"00:00","monday_end":"04:30","tuesday_start":"00:00","tuesday_end":"06:30","wednesday_start":"00:00","wednesday_end":"11:00","thursday_start":"00:00","thursday_end":"13:00","friday_start":"00:00","friday_end":"21:00","saturday_start":"01:30","saturday_end":"07:30","sunday_start":"Off","sunday_end":"Off"}
   console.log(schedule, 'schedule')
-  const militaryToStandard = (time: string) => {
+  const militaryToStandard = (time: string | null) => {
     // sample time: "00:00"
     console.log(time, 'time', typeof time)
     if (time === 'Off') return 'Off';
-    if (time === '') return '';
+    if (time === null || typeof time === 'undefined' || time === '') return '';
     
     const [hours, minutes] = time.split(':');
     const hour = parseInt(hours);
@@ -70,107 +70,106 @@ export default function Schedule({ name, schedule, last_updated, isUser, chaeryb
         </div>
       </CardHeader>
       {schedule ? (
-        <Accordion type="single" collapsible className="">
-          <AccordionItem value="item-1">
-            <AccordionTrigger className="p-0 px-6 pb-4 text-cherry_light-700">Show Schedule</AccordionTrigger>
-            <AccordionContent>
-              <CardContent className="">
-                <Separator className="mb-3" />
-                <div className="flex flex-row items-center justify-between mb-4">
-                  <p className="font-medium text-sm">Monday:</p>
-                  {schedule.monday_start === 'Off' ? (
-                    <p className="text-white-300">Off work today!</p>
-                  ) : (
-                    <div className="flex gap-2">
-                      <p className="text-white-300">{militaryToStandard(schedule.monday_start ?? '')}</p>
-                      <p className="text-white-300">-</p>
-                      <p className="text-white-300">{militaryToStandard(schedule.monday_end ?? '')}</p>
-                    </div>
-                  )}
-                </div>
+  <Accordion type="single" collapsible className="">
+    <AccordionItem value="item-1">
+      <AccordionTrigger className="p-0 px-6 pb-4 text-cherry_light-700">Show Schedule</AccordionTrigger>
+      <AccordionContent>
+        <CardContent className="">
+          <Separator className="mb-3" />
+          <div className="flex flex-row items-center justify-between mb-4">
+            <p className="font-medium text-sm">Monday:</p>
+            {schedule.monday_start === 'Off' ? (
+              <p className="text-white-300">Off work today!</p>
+            ) : (
+              <div className="flex gap-2">
+                <p className="text-white-300">{militaryToStandard(schedule.monday_start)}</p>
+                <p className="text-white-300">-</p>
+                <p className="text-white-300">{militaryToStandard(schedule.monday_end)}</p>
+              </div>
+            )}
+          </div>
+          <div className="flex flex-row items-center justify-between mb-4">
+            <p className="font-medium text-sm">Tuesday:</p>
+            {schedule.tuesday_start === 'Off' ? (
+              <p className="text-white-300">Off work today!</p>
+            ) : (
+              <div className="flex gap-2">
+                <p className="text-white-300">{militaryToStandard(schedule.tuesday_start)}</p>
+                <p className="text-white-300">-</p>
+                <p className="text-white-300">{militaryToStandard(schedule.tuesday_end)}</p>
+              </div>
+            )}
+          </div>
+          <div className="flex flex-row items-center justify-between mb-4">
+            <p className="font-medium text-sm">Wednesday:</p>
+            {schedule.wednesday_start === 'Off' ? (
+              <p className="text-white-300">Off work today!</p>
+            ) : (
+              <div className="flex gap-2">
+                <p className="text-white-300">{militaryToStandard(schedule.wednesday_start)}</p>
+                <p className="text-white-300">-</p>
+                <p className="text-white-300">{militaryToStandard(schedule.wednesday_end)}</p>
+              </div>
+            )}
+          </div>
+          <div className="flex flex-row items-center justify-between mb-4">
+            <p className="font-medium text-sm">Thursday:</p>
+            {schedule.thursday_start === 'Off' ? (
+              <p className="text-white-300">Off work today!</p>
+            ) : (
+              <div className="flex gap-2">
+                <p className="text-white-300">{militaryToStandard(schedule.thursday_start)}</p>
+                <p className="text-white-300">-</p>
+                <p className="text-white-300">{militaryToStandard(schedule.thursday_end)}</p>
+              </div>
+            )}
+          </div>
+          <div className="flex flex-row items-center justify-between mb-4">
+            <p className="font-medium text-sm">Friday:</p>
+            {schedule.friday_start === 'Off' ? (
+              <p className="text-white-300">Off work today!</p>
+            ) : (
+              <div className="flex gap-2">
+                <p className="text-white-300">{militaryToStandard(schedule.friday_start)}</p>
+                <p className="text-white-300">-</p>
+                <p className="text-white-300">{militaryToStandard(schedule.friday_end)}</p>
+              </div>
+            )}
+          </div>
+          <div className="flex flex-row items-center justify-between mb-4">
+            <p className="font-medium text-sm">Saturday:</p>
+            {schedule.saturday_start === 'Off' ? (
+              <p className="text-white-300">Off work today!</p>
+            ) : (
+              <div className="flex gap-2">
+                <p className="text-white-300">{militaryToStandard(schedule.saturday_start)}</p>
+                <p className="text-white-300">-</p>
+                <p className="text-white-300">{militaryToStandard(schedule.saturday_end)}</p>
+              </div>
+            )}
+          </div>
+          <div className="flex flex-row items-center justify-between">
+            <p className="font-medium text-sm">Sunday:</p>
+            {schedule.sunday_start === 'Off' ? (
+              <p className="text-white-300">Off work today!</p>
+            ) : (
+              <div className="flex gap-2">
+                <p className="text-white-300">{militaryToStandard(schedule.sunday_start)}</p>
+                <p className="text-white-300">-</p>
+                <p className="text-white-300">{militaryToStandard(schedule.sunday_end)}</p>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </AccordionContent>
+    </AccordionItem>
+  </Accordion>
+) : (
+  <div>
+    <p className="p-0 px-6 pb-4">No Schedule Yet.</p>
+  </div>
+)}
 
-                <div className="flex flex-row items-center justify-between mb-4">
-                  <p className="font-medium text-sm">Tuesday:</p>
-                  {schedule?.tuesday_start === 'Off' ? (
-                    <p className="text-white-300">Off work today!</p>
-                  ) : (
-                    <div className="flex gap-2">
-                      {schedule?.tuesday_start !== 'Off' && (
-                        <>
-                          <p className="text-white-300">{militaryToStandard(schedule?.tuesday_start ?? '')}</p>
-                          <p className="text-white-300">-</p>
-                          <p className="text-white-300">{militaryToStandard(schedule?.tuesday_end ?? '')}</p>
-                        </>
-                      )}
-                      {schedule?.tuesday_start === 'Off' && (
-                        <p className="text-white-300">Off work today!</p>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="flex gap-2">
-                      <p className="text-white-300">{militaryToStandard(schedule?.wednesday_start ?? '')}</p>
-                      <p className="text-white-300">-</p>
-                      <p className="text-white-300">{militaryToStandard(schedule?.wednesday_end ?? '')}</p>
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-row items-center justify-between mb-4">
-                  <p className="font-medium text-sm">Thursday:</p>
-                  {schedule?.thursday_start === 'Off' ? (
-                    <p className="text-white-300">Off work today!</p>
-                  ) : (
-                    <div className="flex gap-2">
-                      <p className="text-white-300">{militaryToStandard(schedule?.thursday_start ?? '')}</p>
-                      <p className="text-white-300">-</p>
-                      <p className="text-white-300">{militaryToStandard(schedule?.thursday_end ?? '')}</p>
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-row items-center justify-between mb-4">
-                  <p className="font-medium text-sm">Friday:</p>
-                  {schedule?.friday_start === 'Off' ? (
-                    <p className="text-white-300">Off work today!</p>
-                  ) : (
-                    <div className="flex gap-2">
-                      <p className="text-white-300">{militaryToStandard(schedule?.friday_start ?? '')}</p>
-                      <p className="text-white-300">-</p>
-                      <p className="text-white-300">{militaryToStandard(schedule?.friday_end ?? '')}</p>
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-row items-center justify-between mb-4">
-                  <p className="font-medium text-sm">Saturday:</p>
-                  {schedule?.saturday_start === 'Off' ? (
-                    <p className="text-white-300">Off work today!</p>
-                  ) : (
-                    <div className="flex gap-2">
-                      <p className="text-white-300">{militaryToStandard(schedule?.saturday_start ?? '')}</p>
-                      <p className="text-white-300">-</p>
-                      <p className="text-white-300">{militaryToStandard(schedule?.saturday_end ?? '')}</p>
-                    </div>
-                  )}
-                </div>
-                <div className="flex flex-row items-center justify-between">
-                  <p className="font-medium text-sm">Sunday:</p>
-                  {schedule?.sunday_start === 'Off' ? (
-                    <p className="text-white-300">Off work today!</p>
-                  ) : (
-                    <div className="flex gap-2">
-                      <p className="text-white-300">{militaryToStandard(schedule?.sunday_start ?? '')}</p>
-                      <p className="text-white-300">-</p>
-                      <p className="text-white-300">{militaryToStandard(schedule?.sunday_end ?? '')}</p>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      ) : (
-        <div>
-          <p className="p-0 px-6 pb-4">No Schedule Yet.</p>
-        </div>
-      )}
     </Card>
   )
 }
