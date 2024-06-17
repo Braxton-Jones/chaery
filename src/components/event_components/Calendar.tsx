@@ -53,20 +53,28 @@ export default async function Calendar({
   return (
     <section className="w-full h-full space-y-5">
       <RelationshipCalendar chaerybond={chaery_link} events={events && events[0]?.couples_events} />
-      <Schedule
-        name={CurrentUser.first_name}
-        schedule={yourSchedule}
-        last_updated={CurrentUser.last_schedule_update}
-        isUser={true}
-        chaerybond={CurrentUser.chaery_id}
-      />
-      <Schedule
-        name={Partner?.first_name}
-        schedule={partnerSchedule}
-        isUser={false}
-        chaerybond={null}
-        last_updated={Partner?.last_schedule_update}
-      />
+     {yourSchedule !== 'null' && partnerSchedule !== 'null' ? (
+      <>
+       <Schedule
+       name={CurrentUser.first_name}
+       schedule={yourSchedule}
+       last_updated={CurrentUser.last_schedule_update}
+       isUser={true}
+       chaerybond={CurrentUser.chaery_id}
+     />
+     <Schedule
+       name={Partner?.first_name}
+       schedule={partnerSchedule}
+       isUser={false}
+       chaerybond={null}
+       last_updated={Partner?.last_schedule_update}
+     />
+     </>) : (
+        <div className="flex justify-center items-center h-96">
+          <p className="text-lg text-cherry_light-700">No schedules</p>
+        </div>
+     )}
+      
     </section>
   )
 }
