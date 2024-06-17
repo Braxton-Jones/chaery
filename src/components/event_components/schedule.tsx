@@ -30,7 +30,9 @@ type ScheduleProps = {
 }
 
 export default function Schedule({ name, schedule, last_updated, isUser, chaerybond }: ScheduleProps) {
+  console.log(schedule, 'schedule component')
   const militaryToStandard = (time: string | null) => {
+    console.log(time, 'time,', typeof time)
     if (time === 'Off') return 'Off';
     if (time === null || typeof time === 'undefined' || time === '') return '';
     
