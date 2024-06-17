@@ -30,8 +30,11 @@ type ScheduleProps = {
 }
 
 export default function Schedule({ name, schedule, last_updated, isUser, chaerybond }: ScheduleProps) {
-  console.log(schedule, 'in the schedule component')
+  // Sample schedule object:
+  // {"monday_start":"00:00","monday_end":"04:30","tuesday_start":"00:00","tuesday_end":"06:30","wednesday_start":"00:00","wednesday_end":"11:00","thursday_start":"00:00","thursday_end":"13:00","friday_start":"00:00","friday_end":"21:00","saturday_start":"01:30","saturday_end":"07:30","sunday_start":"Off","sunday_end":"Off"}
   const militaryToStandard = (time: string | null) => {
+    // sample time: "00:00"
+    console.log(time, 'time', typeof time)
     if (time === 'Off') return 'Off';
     if (time === null || typeof time === 'undefined' || time === '') return '';
     
