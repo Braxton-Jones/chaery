@@ -69,7 +69,7 @@ export default function Schedule({ name, schedule, last_updated, isUser, chaeryb
           )}
         </div>
       </CardHeader>
-      {schedule !== null ? (
+      {schedule ? (
         <Accordion type="single" collapsible className="">
           <AccordionItem value="item-1">
             <AccordionTrigger className="p-0 px-6 pb-4 text-cherry_light-700">Show Schedule</AccordionTrigger>
