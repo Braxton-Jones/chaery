@@ -30,8 +30,11 @@ type ScheduleProps = {
 }
 
 export default function Schedule({ name, schedule, last_updated, isUser, chaerybond }: ScheduleProps) {
-  console.log(schedule, 'schedule component')
+  console.log(schedule?.monday_end, 'schedule component')
+  console.log(schedule)
   const militaryToStandard = (time: string | null) => {
+    // cponsole log the schedule
+    console.log(schedule, 'schedule in militaryToStandard')
     console.log(time, 'time,', typeof time)
     if (time === 'Off') return 'Off';
     if (time === null || typeof time === 'undefined' || time === '') return '';
@@ -75,26 +78,26 @@ export default function Schedule({ name, schedule, last_updated, isUser, chaeryb
                 <Separator className="mb-3" />
                 <div className="flex flex-row items-center justify-between mb-4">
                   <p className="font-medium text-sm">Monday:</p>
-                  {schedule?.monday_start === 'Off' ? (
+                  {schedule.monday_start === 'Off' ? (
                     <p className="text-white-300">Off work today!</p>
                   ) : (
                     <div className="flex gap-2">
-                      <p className="text-white-300">{militaryToStandard(schedule?.monday_start)}</p>
+                      <p className="text-white-300">{militaryToStandard(schedule.monday_start)}</p>
                       <p className="text-white-300">-</p>
-                      <p className="text-white-300">{militaryToStandard(schedule?.monday_end)}</p>
+                      <p className="text-white-300">{militaryToStandard(schedule.monday_end)}</p>
                     </div>
                   )}
                 </div>
 
                 <div className="flex flex-row items-center justify-between mb-4">
                   <p className="font-medium text-sm">Tuesday:</p>
-                  {schedule?.tuesday_start === 'Off' ? (
+                  {schedule.tuesday_start === 'Off' ? (
                     <p className="text-white-300">Off work today!</p>
                   ) : (
                     <div className="flex gap-2">
-                      <p className="text-white-300">{militaryToStandard(schedule?.tuesday_start)}</p>
+                      <p className="text-white-300">{militaryToStandard(schedule.tuesday_start)}</p>
                       <p className="text-white-300">-</p>
-                      <p className="text-white-300">{militaryToStandard(schedule?.tuesday_end)}</p>
+                      <p className="text-white-300">{militaryToStandard(schedule.tuesday_end)}</p>
                     </div>
                   )}
                 </div>
